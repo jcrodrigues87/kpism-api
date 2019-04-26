@@ -1,2 +1,2 @@
 # kpism-api
-Projeto Open Source para criação de vídeos automáticos
+API para gerencimento de indicadores
