@@ -1,0 +1,31 @@
+{
+  "name": "kpism-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "express-acl": "^2.0.4",
+    "express-jwt": "^5.3.1",
+    "generate-password": "^1.4.0",
+    "jsonwebtoken": "^8.3.0",
+    "moment": "^2.22.2",
+    "mongoose": "^5.3.5",
+    "mongoose-unique-validator": "^2.0.2",
+    "nodemailer": "^4.6.8",
+    "nodemailer-express-handlebars": "^3.0.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7"
+  }
+}

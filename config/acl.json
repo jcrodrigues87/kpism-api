@@ -1,0 +1,127 @@
+[
+  {
+    "group": "anonymous",
+    "permissions": [
+      {
+        "resource": "/auth/*",
+        "methods": ["POST"],
+        "action": "allow"
+      }
+    ]
+  },
+  {
+    "group": "admin",
+    "permissions": [
+      {
+        "resource": "*",
+        "methods": "*",
+        "action": "allow"
+      }
+    ]
+  },
+  {
+    "group": "supervisor",
+    "permissions": [
+      {
+        "resource": "/auth",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/profiles/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      {
+        "resource": "/users/*",
+        "methods": "*",
+        "action": "deny"
+      },
+      {
+        "resource": "/departments/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/departments/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/indicators/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      {
+        "resource": "/periods/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/periods/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/charts/*",
+        "methods": ["GET"],
+        "action": "allow"
+      }
+    ]
+  },
+  {
+    "group": "user",
+    "permissions": [
+      {
+        "resource": "/auth",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/profiles/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      {
+        "resource": "/users/*",
+        "methods": "*",
+        "action": "deny"
+      },
+      {
+        "resource": "/departments/*",
+        "methods": ["GET"],
+        "action": "deny"
+      },
+      {
+        "resource": "/departments/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/periods/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/periods/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/indicators/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/indicators/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/charts/*",
+        "methods": ["GET"],
+        "action": "allow"
+      }
+    ]
+  }
+]
