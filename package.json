@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "initApp": "node ./init-app.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-acl": "^2.0.4",
     "express-jwt": "^5.3.1",

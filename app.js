@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const isProduction = require('./config').production;
+const environment = require('./config').environment;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -25,7 +25,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (!isProduction) {
+if (environment === 'development') {
   app.use(function(err, req, res, next) {
     console.log(err.stack);
 
@@ -49,4 +49,4 @@ app.use(function(err, req, res, next) {
 });
 
 // start the server
-app.listen(3000);
+app.listen(process.env.PORT);

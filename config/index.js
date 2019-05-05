@@ -1,10 +1,17 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 module.exports = {
-  secret: '99f58fbe088e91f601a8d2c6a3396b03',
-  production: false,
+  secret: process.env.SECRET,
+  environment: process.env.NODE_ENV,
+  mongo: {
+    url: process.env.MONGO_URL
+  },
   mail: {
-    host: 'smtp.mailtrap.io',
-    port: 2525,
-    user: '1d6e389b2d26b3',
-    pass: 'd6879e09310874'
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 }
