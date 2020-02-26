@@ -95,7 +95,7 @@ router.get('/:indicatorId', async (req, res, next) => {
 router.delete('/:indicatorId', async (req, res, next) => {
   try {
     const indicator = await Indicator.findByIdAndRemove(req.params.indicatorId);
-
+    const responsable = await Responsable.deleteMany({indicator: indicator._id});
     return res.sendStatus(204);
   } catch (err) {
     return next(err);
