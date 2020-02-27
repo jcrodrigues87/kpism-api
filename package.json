@@ -18,7 +18,7 @@
     "express": "^4.16.4",
     "express-acl": "^2.0.4",
     "express-jwt": "^5.3.1",
-    "generate-password": "^1.4.0",
+    "generate-password": "^1.4.1",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.22.2",
     "mongoose": "^5.7.5",
