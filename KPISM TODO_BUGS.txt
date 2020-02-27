@@ -1,0 +1,52 @@
+Front-End:
+
+	Interface - Botão ao lado de "Conta" não faz nada.
+	Interface - Mudar ano no rodapé.
+	Interface - Colocar nome do colaborador no topo ao lado da "foto".
+	Interface - Alterar icones no menu???
+	Interface - Remover botão de "Excluir" de editar indicadores do supervisor.
+	Interface - Colocar mensagem de "PERIGO" ao deletar Departamento, Indicador e Periodo, pois pode causar perda de dados.
+
+	Cesta - Indicador possui uma tabela para quando está em cesta e outra para quando não, fazendo com que o calculo no dashboard calcule sempre a tabela sem cesta.
+	
+	Login - "Esqueceu sua senha" não faz nada.
+	Login - Aviso de usuario ou senha incorretos aparecem em ingles.
+
+	PLR - Criar interface referentes a PLR.
+
+	Indicadores - Impossivel acessar "Responsáveis" de anos anteriores.
+	Indicadores - Impossivel acessar "Previsto/Realizado" de anos anteriores.
+	Indicadores - Cesta - Clicar em apagar mostra a aba daquele indicador ao lado.
+
+	Dashboard - Mudar periodo não atualiza o dashboard.
+	Dashboard - Varios erros na mudança de Periodo, referencia e usuario.
+	Dashboard - Referencia deveria começar com o mês atual, atualmente começa em dezembro.
+	Dashboard - Colocar embaixo da detalhação de indicadores um "Não há registro de indicadores" quando vazio.
+	Dashboard - Como vai ter muitos usuarios, separar usuarios de departamentos no filtro OU colocar departamento primeiro.
+	Dashboard - Mostrar Usuarios em ordem alfabetica???
+	Dashboard - Data em "Acumulado" comportando de forma estranha???
+
+
+
+Back-End:
+
+	API - Bloquear alterações fora do periodo vigente.
+
+	Autorização - Remover autorização de DELETE para indicadores do supervisor.
+
+	Usuario - Email com a senha deve chegar ao email registrado pelo usuario (atualmente chegando a um email padrão).
+
+	Metering - API get metering não deve criar metering para indicador que seja uma cesta.
+	
+	Banco - Se excluir usuario, o indicador que o usa fica com problema. 
+		(Indicador tenta buscar usuario que não existe na base, dando erro no restante dos usuarios).
+	Banco - Se excluir indicador, o dashboard dos usuarios que o utiliza fica com problema.
+		(Dashboard do usuario tenta buscar indicador que não existe na vase, dando erro e mostrando o dashboard do usuario anterior).
+	Banco - Se excluir indicador que faz parte de uma cesta, da problema na cesta.
+	Banco - Vai acontecer os erros acima com todas as classes que se interligam.
+
+	Cesta - Cesta não calcula valores no dashboard.
+
+	PLR - Calcular os valores referentes a PLR.
+
+	Indicadores - Regras não condizem com as regras estabelecidas pelo setor de processos.

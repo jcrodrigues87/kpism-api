@@ -3,7 +3,7 @@ const Indicator = require('../../models/Indicator');
 const Period = require('../../models/Period');
 const Metering = require('../../models/Metering');
 
-// get user data, access by admin only
+// get user chart, access by admin only
 router.get('/:indicatorId/:periodId', async (req, res, next) => {
   try {
     const indicator = await Indicator.findById(req.params.indicatorId);

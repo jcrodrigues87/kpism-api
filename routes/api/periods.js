@@ -1,16 +1,13 @@
 const router = require('express').Router();
 const Period = require('../../models/Period');
 const Metering = require('../../models/Metering');
+const Responsable = require('../../models/Responsable');
 
-// create a new user, access by admin only
+// create a new period, access by admin only
 router.post('/', async (req, res, next) => {
   try {
-    //console.log(req.body.period.begin);
-
     const period = new Period(req.body.period);
 
-    //period.begin = new Date(req.body.period.begin);
-    //console.log(period.begin)
     await period.save();
 
     return res.json({ period: period.toCrudJSON() });
@@ -19,7 +16,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// update user data, acces by admin only
+// update period data, acces by admin only
 router.put('/:periodId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
@@ -47,7 +44,7 @@ router.put('/:periodId', async (req, res, next) => {
   }
 });
 
-// get user data, access by admin only
+// get period data, access by admin only
 router.get('/:periodId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
@@ -61,7 +58,7 @@ router.get('/:periodId', async (req, res, next) => {
   }
 });
 
-// get user data, access by admin only
+// get period data, access by admin only
 router.get('/:periodId/references', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
@@ -93,18 +90,20 @@ router.get('/:periodId/references', async (req, res, next) => {
   }
 });
 
-// deçete user data, access by admin only
+// delete period data, access by admin only
 router.delete('/:periodId', async (req, res, next) => {
   try {
     const period = await Period.findByIdAndRemove(req.params.periodId);
-
+    const responsable = await Responsable.deleteMany({period: period._id}); // if period is deleted, responsable of that period must be deleted too
+    const metering = await Metering.deleteMany({period: period._id});; // if period is deleted, metering of that period must be deleted too
+    
     return res.sendStatus(204);
   } catch (err) {
     return next(err);
   }
 });
 
-// get query users, access by admin only
+// get query periods, access by admin only
 router.get('/', async (req, res, next) => {
   try {
     const periods = await Period.find().sort('name');

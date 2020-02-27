@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../../models/User');
 const Department = require('../../models/Department');
 const mailer = require('../../modules/mailer');
+const Responsable = require('../../models/Responsable');
 
 populateUser = async user => {
   if (user.department && user.department.childOf)
@@ -107,10 +108,11 @@ router.get('/:userId', async (req, res, next) => {
   }
 });
 
-// deçete user data, access by admin only
+// delete user data, access by admin only
 router.delete('/:userId', async (req, res, next) => {
   try {
     const user = await User.findByIdAndRemove(req.params.userId);
+    const responsable = await Responsable.deleteMany({user: user._id}) // if user is deleted, field responsable of that user must be deleted too
 
     return res.sendStatus(204);
   } catch (err) {

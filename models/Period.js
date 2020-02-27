@@ -16,7 +16,6 @@ const PeriodSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 PeriodSchema.methods.toCrudJSON = function() {
-  //console.log(this.begin.);
   return {
     id: this.id,
     name: this.name,

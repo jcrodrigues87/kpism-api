@@ -21,7 +21,6 @@ let configObj = {
 
 acl.config(configObj);
 
-//router.use(auth.optional);
 router.use(auth);
 router.use(acl.authorize);
 router.use(userlog);

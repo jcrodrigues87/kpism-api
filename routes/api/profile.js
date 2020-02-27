@@ -26,7 +26,7 @@ router.put('/', async (req, res, next) => {
   }
 });
 
-// get user profil data, all can access
+// get user profile data, all can access
 router.get('/:userId', async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);

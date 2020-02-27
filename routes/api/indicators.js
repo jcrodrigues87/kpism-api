@@ -16,6 +16,12 @@ responsablePopulateUser = async user => {
   return user;
 }
 
+///////////////////////////////////////////////////
+//
+// INDICATOR
+//
+///////////////////////////////////////////////////
+
 // create a new indicator, access by supervisor
 router.post('/', async (req, res, next) => {
   try {
@@ -91,11 +97,15 @@ router.get('/:indicatorId', async (req, res, next) => {
   }
 });
 
-// delete indicator data, access by supervisor
+// delete indicator data, access by Admin
 router.delete('/:indicatorId', async (req, res, next) => {
   try {
     const indicator = await Indicator.findByIdAndRemove(req.params.indicatorId);
-    const responsable = await Responsable.deleteMany({indicator: indicator._id});
+    const responsable = await Responsable.deleteMany({indicator: indicator._id}); // if indicator is deleted, responsable of that indicator must be deleted too
+    const basketItemRef = await BasketItem.deleteMany({indicatorRef: indicator._id}); // if indicator is deleted, the basket that it is root must be deleted too
+    const basketItem = await BasketItem.deleteMany({indicator: indicator._id}); // if indicator is deleted, the basket that it is leaf must be deleted too
+    const metering = await Metering.deleteMany({indicator: indicator._id}); // if indicator is deleted, the metering of that indicator must be deleted too
+
     return res.sendStatus(204);
   } catch (err) {
     return next(err);
@@ -118,7 +128,6 @@ router.get('/', async (req, res, next) => {
       }
 
       if (req.query.type === 'byDepartment') {
-        console.log(req.query.departmentId);
 
         const indicators = await Indicator.find({
           department: req.query.departmentId
@@ -137,7 +146,12 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-//------------------ Indicators BasketItem endpoints ------------------//
+///////////////////////////////////////////////////
+//
+// INDICATOR BASKETITEM ENDPOINTS
+//
+///////////////////////////////////////////////////
+
 // query basketItens for an indicator and period
 router.get('/:indicatorId/basketItems', async (req, res, next) => {
   try {
@@ -148,16 +162,11 @@ router.get('/:indicatorId/basketItems', async (req, res, next) => {
       const basketItems = await BasketItem.find({ 
         indicatorRef: indicator
       }).populate([
-        // { 
-        //   path: 'indicatorRef', 
-        //   populate: { path: 'department' } 
-        // },
         { 
           path: 'indicator', 
           populate: { path: 'department' } 
         }
       ]).sort({ weight: -1 });
-      //}).populate(['indicatorRef','indicator']);
 
       return res.json({ basketItems: basketItems.map(basketItem => basketItem.toCrudJSON()) });
     } else {
@@ -231,7 +240,12 @@ router.delete('/:indicatorRefId/basketItems/:indicatorId', async (req, res, next
   }
 });
 
-//------------------ Indicators Responsables endpoints ------------------//
+///////////////////////////////////////////////////
+//
+// INDICATOR RESPONSABLES ENDPOINTS
+//
+///////////////////////////////////////////////////
+
 // query responsables for an indicator and period
 router.get('/:indicatorId/responsables/:periodId', async (req, res, next) => {
   try {
@@ -324,7 +338,12 @@ router.delete('/:indicatorId/responsables/:periodId/:userId', async (req, res, n
   }
 });
 
-//------------------ Indicators Meterings endpoints ------------------//
+///////////////////////////////////////////////////
+//
+// INDICATOR METERINGS ENDPOINTS
+//
+///////////////////////////////////////////////////
+
 // update meterings accoring to period and return updated values
 updatedMeterings = async (indicator, period, meterings) => {
   const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
@@ -348,7 +367,6 @@ updatedMeterings = async (indicator, period, meterings) => {
     metering.percent = 0;
 
     meteringsRef.push(metering);
-
     begin.setMonth(begin.getMonth() + 1);
   }
 
@@ -432,8 +450,6 @@ calcBasket = async (indicator, periodId, refOrder) => {
     meteretings.push({});
   });
 
-  console.log(basketItems);
-
   return metering;
 };
 
@@ -470,10 +486,6 @@ router.get('/:indicatorId/meterings/:periodId/:refOrder', async (req, res, next)
 
     if (!indicator)
       return res.sendStatus(404);
-
-    // if (indicator.basket) {
-    //   await calcBasket(indicator, req.params.periodId, req.params.refOrder);
-    // }
 
     let metering = await Metering.findOne({ 
       indicator: req.params.indicatorId, 
@@ -559,12 +571,10 @@ router.get('/:indicatorId/meterings/:periodId/:refOrder/accumulated', async (req
   }
 });
 
-
-// update tanget and actual meteretings for an indicator
+// update target and actual meteretings for an indicator
 router.put('/:indicatorId/meterings', async (req, res, next) => {
   try {
     const meterings = req.body.meterings;
-
     const indicator = await Indicator.findById(req.params.indicatorId);
 
     if (indicator) {
