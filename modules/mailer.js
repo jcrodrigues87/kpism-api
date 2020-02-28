@@ -7,6 +7,7 @@ const { host, port, user, pass } = require('../config').mail;
 const transport = nodemail.createTransport({
     host: host,
     port: port,
+    secure: false,
     auth: {
         user: user,
         pass: pass
