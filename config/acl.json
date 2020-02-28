@@ -49,8 +49,13 @@
       },
       {
         "resource": "/indicators/*",
-        "methods": "*",
+        "methods": ["POST","PUT","GET"],
         "action": "allow"
+      },
+      {
+        "resource": "/indicators/*",
+        "methods": ["DELETE"],
+        "action": "deny"
       },
       {
         "resource": "/periods/*",

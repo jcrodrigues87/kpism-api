@@ -22,20 +22,27 @@ router.put('/:periodId', async (req, res, next) => {
     const period = await Period.findById(req.params.periodId);
 
     if (period) {
-      const { name, begin, end } = req.body.period;
+      if (period.closed === false) { // lock period that is closed
+        const { name, begin, end, closed } = req.body.period;
 
-      if (name !== undefined)
-        period.name = name;
+        if (name !== undefined)
+          period.name = name;
 
-      if (begin !== undefined)
-        period.begin = begin;
+        if (begin !== undefined)
+          period.begin = begin;
 
-      if (end !== undefined)
-        period.end = end;
+        if (end !== undefined)
+          period.end = end;
 
-      await period.save();
+        if (closed !== undefined)
+          period.closed = closed;
 
-      return res.json({ period: period.toCrudJSON() });
+        await period.save();
+
+        return res.json({ period: period.toCrudJSON() });
+      } else {
+        return res.sendStatus(403);
+      }
     } else {
       return res.sendStatus(404);
     }
@@ -93,11 +100,17 @@ router.get('/:periodId/references', async (req, res, next) => {
 // delete period data, access by admin only
 router.delete('/:periodId', async (req, res, next) => {
   try {
-    const period = await Period.findByIdAndRemove(req.params.periodId);
-    const responsable = await Responsable.deleteMany({period: period._id}); // if period is deleted, responsable of that period must be deleted too
-    const metering = await Metering.deleteMany({period: period._id});; // if period is deleted, metering of that period must be deleted too
-    
-    return res.sendStatus(204);
+    const period = await Period.findById(req.params.periodId);
+
+    if (period.closed === false) { // lock period that is closed
+      period = await Period.findByIdAndRemove(req.params.periodId);
+      const responsable = await Responsable.deleteMany({period: period._id}); // if period is deleted, responsable of that period must be deleted too
+      const metering = await Metering.deleteMany({period: period._id});; // if period is deleted, metering of that period must be deleted too
+      
+      return res.sendStatus(204);
+    } else {
+      return res.sendStatus(403);
+    }
   } catch (err) {
     return next(err);
   }

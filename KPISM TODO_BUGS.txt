@@ -16,6 +16,7 @@ Front-End:
 	PLR - Criar interface referentes a PLR.
 
 	Indicadores - Impossivel acessar "Responsáveis" de anos anteriores.
+	Indicadores - Impossivel adicionar um responsavel que ja foi utilizado em um ano anterior.
 	Indicadores - Impossivel acessar "Previsto/Realizado" de anos anteriores.
 	Indicadores - Cesta - Clicar em apagar mostra a aba daquele indicador ao lado.
 	Indicadores - Bloquear edição da opção "Cesta".
@@ -30,15 +31,19 @@ Front-End:
 	Dashboard - Mostrar Usuarios em ordem alfabetica???
 	Dashboard - Data em "Acumulado" comportando de forma estranha???
 	Dashboard - Tem hora que o dasboard não atualiza???
-
+	
+	Periodo - Mensagem de "forbidden access" quando tentar alterar periodo fechado.
 
 
 
 Back-End:
 
-	API - Bloquear alterações fora do periodo vigente.
+	---	Autorização - Remover autorização de DELETE para indicadores do supervisor.
+	
+	---	API - Bloquear alterações fora do periodo vigente.
+		Retorno de acesso negado ao tentar modificar ou remover um metering com "period.closed = true";
+		Retorno de acesso negado ao tentar excluir um indicador pertencente a uma cesta;
 
-	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 
 	Metering - API get metering não deve criar metering para indicador que seja uma cesta.
 

@@ -280,29 +280,32 @@ router.post('/:indicatorId/responsables/:periodId/:userId', async (req, res, nex
     const user = await User.findById(req.params.userId);
 
     if (indicator && period && user) {
+      if (period.closed === false) { // lock insert responsable when period is closed
+        const responsable = await Responsable.findOne({ 
+          indicator: indicator, 
+          period: period, 
+          user: user 
+        }).populate(['user','indicator','period']);
 
-      const responsable = await Responsable.findOne({ 
-        indicator: indicator, 
-        period: period, 
-        user: user 
-      }).populate(['user','indicator','period']);
+        if (responsable) {
+          responsable.user = await responsablePopulateUser(responsable.user);
+          return res.json({ responsable: responsable.toCrudJSON() });
+        }
 
-      if (responsable) {
-        responsable.user = await responsablePopulateUser(responsable.user);
-        return res.json({ responsable: responsable.toCrudJSON() });
+        const newresp = new Responsable();
+
+        newresp.indicator = indicator;
+        newresp.period = period;
+        newresp.user = user;
+
+        await newresp.save();
+
+        newresp.user = await responsablePopulateUser(newresp.user);
+
+        return res.json({ responsable: newresp.toCrudJSON() });
+      } else {
+        return res.sendStatus(403);
       }
-
-      const newresp = new Responsable();
-
-      newresp.indicator = indicator;
-      newresp.period = period;
-      newresp.user = user;
-
-      await newresp.save();
-
-      newresp.user = await responsablePopulateUser(newresp.user);
-
-      return res.json({ responsable: newresp.toCrudJSON() });
     } else {
       return res.sendStatus(404);
     }
@@ -319,17 +322,20 @@ router.delete('/:indicatorId/responsables/:periodId/:userId', async (req, res, n
     const user = await User.findById(req.params.userId);
 
     if (indicator && period && user) {
+      if (period.closed === false) { // lock delete responsable when period is closed
+        const responsable = await Responsable.findOne({ 
+          indicator: indicator, 
+          period: period, 
+          user: user 
+        }).populate(['user','indicator','period']);
 
-      const responsable = await Responsable.findOne({ 
-        indicator: indicator, 
-        period: period, 
-        user: user 
-      }).populate(['user','indicator','period']);
+        if (responsable)
+          await responsable.delete()
 
-      if (responsable)
-        await responsable.delete()
-
-      return res.sendStatus(204);
+        return res.sendStatus(204);
+      } else {
+        return res.sendStatus(403);
+      }
     } else {
       return res.sendStatus(404);
     }
