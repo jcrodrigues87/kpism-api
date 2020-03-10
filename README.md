@@ -20,16 +20,17 @@ EMAIL_PASS=userPassword
 
 ### Department
 
+Create Department
+```
 POST {{url}}/api/departments
-
     Input: {
         "department": {
 		    "name":"new department",
 		    "description":"department"
 	    }
     }
-
     Output: 
+```
 
 GET {{url}}/api/departments
 
