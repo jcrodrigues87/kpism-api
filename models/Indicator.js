@@ -9,6 +9,11 @@ const IndicatorSchema = new mongoose.Schema({
     type: String,
     required: [true, "can't be blank"]
   },
+  period: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Period',
+    required: [true, "can't be blank"]
+  },
   department: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
@@ -24,16 +29,42 @@ const IndicatorSchema = new mongoose.Schema({
     lowercase: true,
     enum: ['sum','avg','equalsref']
   },
-  basket: {
-    type: Boolean,
-    default: false
-  },
   orientation: {
     type: String,
     required: [true, "can't be blank"],
     lowercase: true,
     enum: ['higher','lower']
-  }
+  },
+  basket: {
+    type: Boolean,
+    default: false
+  },
+  metering: [
+    {
+      refOrder: {
+        type: Number
+      },
+      refName: {
+        type: String
+      },
+      target: {
+        type: Number,
+        required: [true, "can't be blank"]
+      },
+      actual: {
+        type: Number,
+        required: [true, "can't be blank"]
+      },
+      difference: {
+        type: Number,
+        required: [true, "can't be blank"]
+      },
+      percent: {
+        type: Number,
+        required: [true, "can't be blank"]
+      }
+    }
+  ],
 }, { timestamps: true });
 
 IndicatorSchema.methods.toCrudJSON = function() {
@@ -41,11 +72,13 @@ IndicatorSchema.methods.toCrudJSON = function() {
     id: this.id,
     name: this.name,
     description: this.description,
-    measure: this.measure,
+    period: this.period ? this.period.toCrudJSON() : undefined,
     department: this.department ? { id: this.department.id, name: this.department.name } : undefined,
+    measure: this.measure,
     accumulatedType: this.accumulatedType,
     orientation: this.orientation,
     basket: this.basket,
+    metering: this.metering,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }

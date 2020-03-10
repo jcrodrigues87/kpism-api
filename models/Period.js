@@ -16,6 +16,10 @@ const PeriodSchema = new mongoose.Schema({
   closed: {
     type: Boolean,
     default: false
+  },
+  inactive: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 
@@ -26,6 +30,7 @@ PeriodSchema.methods.toCrudJSON = function() {
     begin: this.begin,
     end: this.end,
     closed: this.closed,
+    inactive: this.inactive,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }

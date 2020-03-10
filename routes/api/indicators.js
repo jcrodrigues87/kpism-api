@@ -4,7 +4,6 @@ const User = require('../../models/User');
 const Period = require('../../models/Period');
 const Responsable = require('../../models/Responsable');
 const Department = require('../../models/Department');
-const Metering = require('../../models/Metering');
 const BasketItem = require('../../models/BasketItem');
 
 const moment = require('moment');
@@ -31,6 +30,13 @@ router.post('/', async (req, res, next) => {
       indicator.department = await Department.findById(req.body.indicator.department.id).populate(['manager']);
     else 
       indicator.department = undefined;
+
+    if (req.body.indicator.period && req.body.indicator.period.id) 
+      indicator.period = await Period.findById(req.body.indicator.period.id);
+      if (indicator.period.closed === true || indicator.period.inactive === true) // if period is locked, deny the access
+        return res.sendStatus(403);
+    else 
+      indicator.period = undefined;
 
     await indicator.save();
 
@@ -86,7 +92,7 @@ router.put('/:indicatorId', async (req, res, next) => {
 // get indicator data, access by supervisor
 router.get('/:indicatorId', async (req, res, next) => {
   try {
-    const indicator = await Indicator.findById(req.params.indicatorId).populate(['department']);
+    const indicator = await Indicator.findById(req.params.indicatorId).populate(['department', 'period']);
 
     if (indicator)
       return res.json({ indicator: indicator.toCrudJSON() });
@@ -97,14 +103,20 @@ router.get('/:indicatorId', async (req, res, next) => {
   }
 });
 
+
+// TRATAR CONTRATO *****************************************************************
 // delete indicator data, access by Admin
 router.delete('/:indicatorId', async (req, res, next) => {
   try {
-    const indicator = await Indicator.findByIdAndRemove(req.params.indicatorId);
-    const responsable = await Responsable.deleteMany({indicator: indicator._id}); // if indicator is deleted, responsable of that indicator must be deleted too
-    const basketItemRef = await BasketItem.deleteMany({indicatorRef: indicator._id}); // if indicator is deleted, the basket that it is root must be deleted too
-    const basketItem = await BasketItem.deleteMany({indicator: indicator._id}); // if indicator is deleted, the basket that it is leaf must be deleted too
-    const metering = await Metering.deleteMany({indicator: indicator._id}); // if indicator is deleted, the metering of that indicator must be deleted too
+    const indicator = await Indicator.findById(req.params.indicatorId);
+    const period = await Period.findById(indicator.period)
+    if (period.closed === false) {
+      const indicator = await Indicator.findByIdAndRemove(req.params.indicatorId);
+      //const contract = await Contract.deleteMany({indicator: indicator._id}); // if indicator is deleted, indicator inside contracts must be deleted too
+      const basketItemRef = await BasketItem.deleteMany({indicatorRef: indicator._id}); // if indicator is deleted, the basket that it is root must be deleted too
+      const basketItem = await BasketItem.deleteMany({indicator: indicator._id}); // if indicator is deleted, the basket that it is leaf must be deleted too
+    } else 
+      return res.sendStatus(403);
 
     return res.sendStatus(204);
   } catch (err) {

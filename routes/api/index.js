@@ -2,11 +2,12 @@ const router = require('express').Router();
 
 router.use('/users', require('./users'));
 router.use('/departments', require('./departments'));
-router.use('/indicators', require('./indicators'));
+//router.use('/indicators', require('./indicators'));
 router.use('/periods', require('./periods'));
-router.use('/charts', require('./charts'));
+//router.use('/charts', require('./charts'));
 router.use('/auth', require('./authentication'));
 router.use('/profiles', require('./profiles'));
+router.use('/contracts', require('./contracts'));
 
 // catch validation errors
 router.use((err, req, res, next) => {
