@@ -13,6 +13,10 @@ const PeriodSchema = new mongoose.Schema({
     type: String,
     required: [true, "can't be blank"]
   },
+  companyMultiplier: {
+    type: Number,
+    default: 0
+  },
   closed: {
     type: Boolean,
     default: false
@@ -29,6 +33,7 @@ PeriodSchema.methods.toCrudJSON = function() {
     name: this.name,
     begin: this.begin,
     end: this.end,
+    companyMultiplier: this.companyMultiplier,
     closed: this.closed,
     inactive: this.inactive,
     createdAt: this.createdAt,

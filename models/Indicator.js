@@ -1,5 +1,30 @@
 const mongoose = require('../config/database');
 
+const MeteringSchema = new mongoose.Schema({
+    refOrder: {
+      type: Number
+    },
+    refName: {
+      type: String
+    },
+    target: {
+      type: Number,
+      default: 0
+    },
+    actual: {
+      type: Number,
+      default: 0
+    },
+    difference: {
+      type: Number,
+      default: 0
+    },
+    percent: {
+      type: Number,
+      default: 0
+    }
+});
+
 const IndicatorSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,32 +64,9 @@ const IndicatorSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  metering: [
-    {
-      refOrder: {
-        type: Number
-      },
-      refName: {
-        type: String
-      },
-      target: {
-        type: Number,
-        required: [true, "can't be blank"]
-      },
-      actual: {
-        type: Number,
-        required: [true, "can't be blank"]
-      },
-      difference: {
-        type: Number,
-        required: [true, "can't be blank"]
-      },
-      percent: {
-        type: Number,
-        required: [true, "can't be blank"]
-      }
-    }
-  ],
+  metering: {
+    type: [ MeteringSchema ],
+  }  
 }, { timestamps: true });
 
 IndicatorSchema.methods.toCrudJSON = function() {

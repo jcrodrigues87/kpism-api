@@ -86,6 +86,7 @@ Object
     "name": "2020",
     "begin": "2020-01-01",
     "end": "2020-12-31",
+    "companyMultiplier": 0,
     "closed": false,
     "inactive": false,
     "createdAt": "2020-03-10T14:04:25.051Z",
@@ -263,6 +264,126 @@ GET {{url}}/api/auth
 ### Chart
 
 ### Indicator
+
+Object
+```
+"indicator": {
+    "id": "5e692a1c7beee121708ba806",
+    "name": "Indicator",
+    "description": "Indicator",
+    "period": {
+        "id": "5e679e690ee1bf17fc28ee7d",
+        "name": "2020",
+        "begin": "2020-01-01",
+        "end": "2020-12-31",
+        "companyMultiplier": 0,
+        "closed": false,
+        "inactive": false,
+        "createdAt": "2020-03-10T14:04:25.051Z",
+        "updatedAt": "2020-03-10T17:28:38.064Z"
+    },
+    "department": {
+        "id": "5e68e51fa93af727b8258708",
+        "name": "new department"
+    },
+    "measure": "Número",
+    "accumulatedType": "sum / avg / equalsref",
+    "orientation": "lower / higher",
+    "basket": false / true,
+    "metering": [
+        {
+            "target": 0,
+            "actual": 0,
+            "difference": 0,
+            "percent": 0,
+            "_id": "5e692a1c7beee121708ba807",
+            "refOrder": 1,
+            "refName": "Jan"
+        },
+        { ... }
+    ],
+    "createdAt": "2020-03-11T18:12:44.925Z",
+    "updatedAt": "2020-03-11T18:12:44.925Z"
+}
+```
+
+Create Indicator
+```
+POST {{url}}/api/indicators/:periodId
+    Input: {
+        "indicator": {
+            "name":"Indicator",
+            "description":"Indicator",
+            "orientation": "lower",
+            "accumulatedType": "sum",
+            "measure": "Número",
+            "basket": "false",
+            "department": { "id": "5e68e51fa93af727b8258708"}
+        }
+    }
+    Output: "indicator": { ... }
+```
+
+Get Indicator by Id
+```
+GET {{url}}/api/indicators/:periodId/:indicatorId
+    Input: -
+    Output: "indicator": { ... }
+```
+
+Get Indicator List
+```
+GET {{url}}/api/indicators/:periodId
+    Input: -
+    Output: "indicators": [{ ... }]
+```
+
+Update Indicator by Id
+```
+PUT {{url}}/api/indicators/:periodId/:indicatorId
+    Input: {
+        "indicator": {
+            "name":"Indicator"
+        }
+    }
+    Output: "indicator": { ... }
+```
+
+Delete Indicator by Id
+```
+DELETE {{url}}/api/indicators/:periodId/:indicatorId
+    Input: -
+    Output: -
+```
+
+Update Meterings
+```
+PUT {{url}}/api/indicators/meterings/:periodId/:indicatorId
+    Input: {
+        "meterings": [
+            {
+                "target": 10,
+                "actual": 10,
+                "difference": 0,
+                "percent": 0,
+                "_id": "5e692a1c7beee121708ba807",
+                "refOrder": 1,
+                "refName": "Jan"
+            },
+            { ... },
+            {
+                "target": 0,
+                "actual": 0,
+                "difference": 0,
+                "percent": 0,
+                "_id": "5e692a1c7beee121708ba812",
+                "refOrder": 12,
+                "refName": "Dez"
+            }
+        ]
+    } 
+    Output: "indicator": { ... }
+```
 
 ### Contract
 

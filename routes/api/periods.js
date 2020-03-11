@@ -21,7 +21,7 @@ router.put('/:periodId', async (req, res, next) => {
 
     if (period) {
       if (period.closed === false && period.inactive === false) { // lock period that is closed or inactive
-        const { name, begin, end, closed } = req.body.period;
+        const { name, begin, end, companyMultiplier, closed } = req.body.period;
 
         if (name !== undefined)
           period.name = name;
@@ -31,6 +31,9 @@ router.put('/:periodId', async (req, res, next) => {
 
         if (end !== undefined)
           period.end = end;
+
+        if (companyMultiplier !== undefined)
+          period.companyMultiplier = companyMultiplier;
 
         if (closed !== undefined)
           period.closed = closed;

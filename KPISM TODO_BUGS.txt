@@ -42,6 +42,11 @@ Back-End:
 	Period - GET Period Reference - TA USANDO???
 	User - OK
 	Contract - OK
+	Indicator - 
+		Testar integridade DELETE
+		Get by Contract
+		Get by Department
+	Metering - OK ???
 
 	---	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 	
