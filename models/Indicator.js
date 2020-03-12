@@ -60,6 +60,12 @@ const IndicatorSchema = new mongoose.Schema({
     lowercase: true,
     enum: ['higher','lower']
   },
+  classification: {
+    type: String,
+    required: [true, "can't be blank"],
+    lowercase: true,
+    enum: ['strategic','tactical','operational']
+  },
   basket: {
     type: Boolean,
     default: false
@@ -79,6 +85,7 @@ IndicatorSchema.methods.toCrudJSON = function() {
     measure: this.measure,
     accumulatedType: this.accumulatedType,
     orientation: this.orientation,
+    classification: this.classification,
     basket: this.basket,
     metering: this.metering,
     createdAt: this.createdAt,

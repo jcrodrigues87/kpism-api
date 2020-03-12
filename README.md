@@ -289,6 +289,7 @@ Object
     "measure": "Número",
     "accumulatedType": "sum / avg / equalsref",
     "orientation": "lower / higher",
+    "classification": "strategic / tactical / operational",
     "basket": false / true,
     "metering": [
         {
@@ -314,9 +315,10 @@ POST {{url}}/api/indicators/:periodId
         "indicator": {
             "name":"Indicator",
             "description":"Indicator",
-            "orientation": "lower",
-            "accumulatedType": "sum",
+            "accumulatedType": "sum / avg / equalsref",
+            "orientation": "lower / higher",
             "measure": "Número",
+            "classification": "strategic / tactical / operational",
             "basket": "false",
             "department": { "id": "5e68e51fa93af727b8258708"}
         }

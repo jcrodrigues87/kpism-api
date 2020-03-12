@@ -90,7 +90,7 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
     const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
 
     if (period && indicator) {
-      const { name, description, measure, accumulatedType, orientation, department, basket, metering } = req.body.indicator;
+      const { name, description, measure, accumulatedType, orientation, classification, department, basket, metering } = req.body.indicator;
 
       if (period.closed === false) {
 
@@ -104,6 +104,8 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
           indicator.accumulatedType = accumulatedType;
         if (orientation !== undefined)
           indicator.orientation = orientation;
+        if (classification !== undefined)
+          indicator.classification = classification;
         if (department !== undefined)
           if (department && department.id)
             indicator.department = await Department.findById(department.id).populate(['manager','childOf']);

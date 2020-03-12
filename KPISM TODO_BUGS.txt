@@ -34,9 +34,9 @@ Front-End:
 	Dashboard - Tem hora que o dasboard não atualiza???
 
 
-
-
 Back-End:
+
+	Adicionar campo classificação do indicador em indicador - Opções : Estrategico, tatico e operacional
 
 	Department - OK
 	Period - GET Period Reference - TA USANDO???
@@ -48,9 +48,9 @@ Back-End:
 		Get by Department
 	Metering - OK ???
 
-	---	Autorização - Remover autorização de DELETE para indicadores do supervisor.
+	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 	
-	---	API - Bloquear alterações fora do periodo vigente.
+	API - Bloquear alterações fora do periodo vigente.
 
 	Metering - API get metering não deve criar metering para indicador que seja uma cesta.
 
