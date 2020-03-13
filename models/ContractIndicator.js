@@ -16,11 +16,6 @@ const ContractIndicatorSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, "can't be blank"]
   },
-  department: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Department',
-    required: [true, "can't be blank"]
-  },
   weight: {
     type: Number,
     required: [true, "can't be blank"]
@@ -30,10 +25,9 @@ const ContractIndicatorSchema = new mongoose.Schema({
 ContractIndicatorSchema.methods.toCrudJSON = function() {
   return {
     id: this.id,
-    indicator: this.indicator ? this.indicator.toCrudJSON() : undefined,
-    contract: this.contract ? this.contract.toCrudJSON() : undefined,
-    user: this.user ? this.user.toProfileJSON() : undefined,
-    department: this.department ? { id: this.department.id, name: this.department.name } : undefined,
+    indicator: this.indicator.id,
+    contract: this.contract.id,
+    user: this.user.id,
     weight: this.weight,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
