@@ -319,7 +319,7 @@ POST {{url}}/api/indicators/:periodId
             "orientation": "lower / higher",
             "measure": "Número",
             "classification": "strategic / tactical / operational",
-            "basket": "false",
+            "basket": false / true,
             "department": { "id": "5e68e51fa93af727b8258708"}
         }
     }

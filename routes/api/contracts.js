@@ -1,7 +1,19 @@
 const router = require('express').Router();
 const Contract = require('../../models/Contract');
+const Indicator = require('../../models/Indicator');
 const User = require('../../models/User');
 const Period = require('../../models/Period');
+
+router.post('/:contractId/:indicatorId', async (req, res, next) => {
+  const contract = await Contract.findById(req.params.contractId);
+  const indicator = await Indicator.findById(req.params.indicatorId);
+  
+  // if (contract && indicator) {
+  //   const user = await User.findById();
+  //   const department = await Period.findById();
+  // }
+  
+});
 
 // get contract data by user/period
 router.get('/:userId/:periodId', async (req, res, next) => {

@@ -36,7 +36,7 @@ Front-End:
 
 Back-End:
 
-	Adicionar campo classificação do indicador em indicador - Opções : Estrategico, tatico e operacional
+	
 
 	Department - OK
 	Period - GET Period Reference - TA USANDO???
@@ -47,6 +47,7 @@ Back-End:
 		Get by Contract
 		Get by Department
 	Metering - OK ???
+	Basket - OK ???
 
 	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 	
@@ -59,3 +60,15 @@ Back-End:
 	PLR - Calcular os valores referentes a PLR.
 
 	Indicadores - Regras não condizem com as regras estabelecidas pelo setor de processos.
+
+	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador; 
+
+	Concluido:
+
+	API de indicadores modificada. Agora é necessario passar periodo para acesso de um indicador;
+	Adicionado campo classificação ao Indicador. Opções : Estrategico, tatico e operacional;
+	Metricas agora fazem parte de indicador. Fomato: Lista com informações das metricas para cada mês;
+	Classe contrato substitui a classe responsavel. Contrato armazena usuario, periodo, referencia para indicador e informações para calculo da PLR;
+	Não é mais possivel deletar departamento, campo departamento inativo adicionado;
+	Não é mais possivel deletar usuario, campo usuario inativo adicionado;
+	Não é mais possivel deletar periodo, campo periodo inativo adicionado;

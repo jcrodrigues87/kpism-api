@@ -1,17 +1,40 @@
 const router = require('express').Router();
 const Indicator = require('../../models/Indicator');
-const User = require('../../models/User');
 const Period = require('../../models/Period');
 const Department = require('../../models/Department');
-const BasketItem = require('../../models/BasketItem');
+const Basket = require('../../models/Basket');
 
 const moment = require('moment');
 
-responsablePopulateUser = async user => {
-  if (user.department)
-    user.department = await Department.findById(user.department).populate(['manager','childOf']);
-  
-  return user;
+applyLimit = async (indicator, percent) => { // apply a upper limit in metering percent
+  if (percent > indicator.limit)
+    percent = indicator.limit;
+  return percent;
+}
+
+updateActualBasket = async (indicator) => { // calc metering of a basket 
+  const basket = await Basket.findOne({indicatorRef: indicator});
+
+  for (month = 0; month < 12; month++) { // for each month of meterings
+    var actual = 0;
+    for (i = 0; i < basket.indicators.length; i++) { // for each indicator in the basket
+      var indicatorMetering = await Indicator.findById(basket.indicators[i].indicator)
+      actual += (indicatorMetering.metering[month].percent * basket.indicators[i].weight / 100)
+    }  
+    target = indicator.metering[month].target;
+    if (indicator.orientation === 'higher') {
+      difference = actual - target;
+      percent =  target ? (actual / target) * 100 : 0;
+    }
+    if (indicator.orientation === 'lower') {
+      difference = target - actual;
+      percent = actual ? (target / actual) * 100 : 0;
+    }
+    indicator.metering[month].actual = actual;
+    indicator.metering[month].difference = difference;
+    indicator.metering[month].percent = await applyLimit(indicator, percent); 
+  }
+  return (indicator);
 }
 
 ///////////////////////////////////////////////////
@@ -19,6 +42,7 @@ responsablePopulateUser = async user => {
 // INDICATOR
 //
 ///////////////////////////////////////////////////
+
 
 // create a new indicator, access by supervisor
 router.post('/:periodId', async (req, res, next) => {
@@ -31,13 +55,20 @@ router.post('/:periodId', async (req, res, next) => {
         indicator.period = period;
         if (req.body.indicator.department && req.body.indicator.department.id) 
           indicator.department = await Department.findById(req.body.indicator.department.id).populate(['manager']);
-        else 
+        else
           indicator.department = undefined;
 
         // create metering
         const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         for (var i = 1; i <= 12; i++) {
           indicator.metering.push({refOrder: i, refName: monthNames[i-1]})
+        }
+
+        // create basket
+        if (req.body.indicator.basket == true) {
+          const basket = new Basket();
+          basket.indicatorRef = indicator._id
+          await basket.save();
         }
 
         await indicator.save();
@@ -59,9 +90,12 @@ router.get('/:periodId/:indicatorId', async (req, res, next) => {
     const period = await Period.findById(req.params.periodId);
     const indicator = await Indicator.findById(req.params.indicatorId).populate(['department', 'period']);
 
-    if (period && indicator)
+    if (period && indicator) {
+
+      if (indicator.basket == true)
+        indicator = await updateActualBasket(indicator);
       return res.json({ indicator: indicator.toCrudJSON() });
-    else
+    } else
       return res.sendStatus(404);
   } catch (err) {
     return next(err);
@@ -90,7 +124,7 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
     const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
 
     if (period && indicator) {
-      const { name, description, measure, accumulatedType, orientation, classification, department, basket, metering } = req.body.indicator;
+      const { name, description, measure, accumulatedType, orientation, classification, limit, department } = req.body.indicator;
 
       if (period.closed === false) {
 
@@ -106,13 +140,13 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
           indicator.orientation = orientation;
         if (classification !== undefined)
           indicator.classification = classification;
+        if (limit !== undefined)
+          indicator.limit = limit;
         if (department !== undefined)
           if (department && department.id)
             indicator.department = await Department.findById(department.id).populate(['manager','childOf']);
           else
             indicator.department = undefined;
-        if (basket !== undefined)
-          indicator.basket = basket;
         await indicator.save();
 
       } else
@@ -152,6 +186,7 @@ router.delete('/:periodId/:indicatorId', async (req, res, next) => {
   }
 });
 
+
 ///////////////////////////////////////////////////
 //
 // INDICATOR METERINGS ENDPOINTS
@@ -162,128 +197,48 @@ router.delete('/:periodId/:indicatorId', async (req, res, next) => {
 router.put('/meterings/:periodId/:indicatorId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
-    const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
+    var indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
 
     if (period && indicator) {
       if (period.closed === false) {
         const meterings = req.body.meterings; // receive all meterings (jan to dez)
-        for (i = 0; i < 12; i++) {
-          if (meterings.length !== 12) // if actual or target is undefined, return bad request
-            return res.sendStatus(400)
-          const { target, actual } = meterings[i];
-          if (indicator.orientation === 'higher') {
-            difference = actual - target;
-            percent =  target ? (actual / target) * 100 : 0;
+        if (meterings.length !== 12) // if actual or target is undefined, return bad request
+          return res.sendStatus(400);
+
+        if (indicator.basket == true) { // if indicator is basket, will be need a calc of the indicators insede of that basket
+          
+          for (var i = 0; i < 12; i++) {
+            const { target } = meterings[i];
+            indicator.metering[i].target = target;
           }
-          if (indicator.orientation === 'lower') {
-            difference = target - actual;
-            percent = actual ? (target / actual) * 100 : 0;
+          indicator = await updateActualBasket(indicator) // do the calc of the indicator when is a basket            
+          await indicator.save();
+          return res.json({ indicator: indicator.toCrudJSON() });
+
+        } else { // if isn't basket, update and calculate meterings
+          for (var i = 0; i < 12; i++) {
+            
+            const { target, actual } = meterings[i];
+            if (indicator.orientation === 'higher') {
+              difference = actual - target;
+              percent =  target ? (actual / target) * 100 : 0;
+            }
+            if (indicator.orientation === 'lower') {
+              difference = target - actual;
+              percent = actual ? (target / actual) * 100 : 0;
+            }
+            indicator.metering[i].actual = actual;
+            indicator.metering[i].target = target;
+            indicator.metering[i].difference = difference;
+            indicator.metering[i].percent = await applyLimit(indicator, percent);
           }
-          indicator.metering[i].actual = actual;
-          indicator.metering[i].target = target;
-          indicator.metering[i].difference = difference;
-          indicator.metering[i].percent = percent;
+          await indicator.save();
+          return res.json({ indicator: indicator.toCrudJSON() });
         }
-        await indicator.save();
-        return res.json({ indicator: indicator.toCrudJSON() });
       } else
-        return res.sendStatus(403)
+        return res.sendStatus(403);
     } else
       return res.sendStatus(404);
-  } catch (err) {
-    return next(err);
-  }
-});
-
-///////////////////////////////////////////////////
-//
-// INDICATOR BASKETITEM ENDPOINTS
-//
-///////////////////////////////////////////////////
-
-// query basketItens for an indicator and period
-router.get('/:indicatorId/basketItems', async (req, res, next) => {
-  try {
-    const indicator = await Indicator.findById(req.params.indicatorId);
-
-    if (indicator) {
-
-      const basketItems = await BasketItem.find({ 
-        indicatorRef: indicator
-      }).populate([
-        { 
-          path: 'indicator', 
-          populate: { path: 'department' } 
-        }
-      ]).sort({ weight: -1 });
-
-      return res.json({ basketItems: basketItems.map(basketItem => basketItem.toCrudJSON()) });
-    } else {
-      return res.sendStatus(404);
-    }
-  } catch (err) {
-    return next(err);
-  }
-});
-
-// add update a basketItem
-router.post('/:indicatorRefId/basketItems/:indicatorId/:weight', async (req, res, next) => {
-  try {
-    const indicatorRef = await Indicator.findById(req.params.indicatorRefId);
-    const indicator = await Indicator.findById(req.params.indicatorId).populate(['department']);
-
-    if (indicatorRef && indicator) {
-
-      let basketItem = await BasketItem.findOne({
-        indicatorRef: indicatorRef,
-        indicator: indicator
-      }).populate([
-        { 
-          path: 'indicator', 
-          populate: { path: 'department' } 
-        }
-      ]);
-      
-      if (!basketItem) {
-        basketItem = new BasketItem();
-
-        basketItem.indicatorRef = indicatorRef;
-        basketItem.indicator = indicator;
-      }
-
-      basketItem.weight = req.params.weight;
-
-      await basketItem.save()
-
-      return res.json({ basketItem: basketItem.toCrudJSON() });
-    } else {
-      return res.sendStatus(404);
-    }
-  } catch (err) {
-    return next(err);
-  }
-});
-
-router.delete('/:indicatorRefId/basketItems/:indicatorId', async (req, res, next) => {
-  try {
-    const indicatorRef = await Indicator.findById(req.params.indicatorRefId);
-    const indicator = await Indicator.findById(req.params.indicatorId);
-
-    if (indicatorRef && indicator) {
-
-      const basketItem = await BasketItem.findOne({
-        indicatorRef: indicatorRef,
-        indicator: indicator
-      });
-
-      if (basketItem) {
-        basketItem.delete()
-        return res.sendStatus(204);
-      }
-
-    }
-
-    return res.sendStatus(404);
   } catch (err) {
     return next(err);
   }
