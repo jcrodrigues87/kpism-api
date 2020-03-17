@@ -112,7 +112,7 @@ router.get('/', async (req, res, next) => {
 // delete period data, access by admin only
 router.delete('/:periodId', async (req, res, next) => {
   try {
-    const period = await Period.findById(req.params.periodId);
+    let period = await Period.findById(req.params.periodId);
 
     if (period.closed === false) { // lock period that is closed
       period = await Period.findByIdAndUpdate({_id: req.params.periodId}, {inactive: true, closed: true});
