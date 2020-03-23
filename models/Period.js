@@ -5,11 +5,7 @@ const PeriodSchema = new mongoose.Schema({
     type: String,
     required: [true, "can't be blank"]
   },
-  begin: {
-    type: String,
-    required: [true, "can't be blank"]
-  },
-  end: {
+  year: {
     type: String,
     required: [true, "can't be blank"]
   },
@@ -31,8 +27,7 @@ PeriodSchema.methods.toCrudJSON = function() {
   return {
     id: this.id,
     name: this.name,
-    begin: this.begin,
-    end: this.end,
+    year: this.year,
     companyMultiplier: this.companyMultiplier,
     closed: this.closed,
     inactive: this.inactive,

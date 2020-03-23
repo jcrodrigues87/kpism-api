@@ -3,6 +3,7 @@ const Indicator = require('../../models/Indicator');
 const Period = require('../../models/Period');
 const Department = require('../../models/Department');
 const Basket = require('../../models/Basket');
+const ContractIndicator = require('../../models/ContractIndicator')
 
 const moment = require('moment');
 
@@ -124,7 +125,7 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
     const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
 
     if (period && indicator) {
-      const { name, description, measure, accumulatedType, orientation, classification, limit, department } = req.body.indicator;
+      const { name, description, measure, accumulatedType, orientation, classification, limit, department, metering } = req.body.indicator;
 
       if (period.closed === false) {
 
@@ -142,6 +143,8 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
           indicator.classification = classification;
         if (limit !== undefined)
           indicator.limit = limit;
+        if (metering !== undefined)
+          indicator.metering = metering;
         if (department !== undefined)
           if (department && department.id)
             indicator.department = await Department.findById(department.id).populate(['manager','childOf']);
@@ -172,8 +175,8 @@ router.delete('/:periodId/:indicatorId', async (req, res, next) => {
 
         const indicator = await Indicator.findByIdAndRemove(req.params.indicatorId);
         const contractIndicator = await ContractIndicator.deleteMany({indicator: indicator._id}); // if indicator is deleted, indicator inside contracts must be deleted too
-        const basketItemRef = await BasketItem.deleteMany({indicatorRef: indicator._id}); // if indicator is deleted, the basket that it is root must be deleted too
-        const basketItem = await BasketItem.deleteMany({indicator: indicator._id}); // if indicator is deleted, the basket that it is leaf must be deleted too
+        const basketRef = await Basket.deleteMany({indicatorRef: indicator._id}); // if indicator is deleted, the basket that it is root must be deleted too
+        const basket = await Basket.deleteMany({indicator: indicator._id}); // if indicator is deleted, the basket that it is leaf must be deleted too
       
       } else 
         return res.sendStatus(403);

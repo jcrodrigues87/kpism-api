@@ -1,39 +1,3 @@
-Front-End:
-
-	Contrato - Fazer aba para contrato.
-
-	Interface - Botão ao lado de "Conta" não faz nada.
-	Interface - Mudar ano no rodapé.
-	Interface - Colocar nome do colaborador no topo ao lado da "foto".
-	Interface - Alterar icones no menu???
-	Interface - Remover botão de "Excluir" de editar indicadores do supervisor.
-	Interface - Colocar mensagem de "PERIGO" ao deletar Departamento, Indicador e Periodo, pois pode causar perda de dados.
-
-	Cesta - Indicador possui uma tabela para quando está em cesta e outra para quando não, fazendo com que o calculo no dashboard calcule sempre a tabela sem cesta.
-	
-	Login - Implementar "Esqueceu sua senha".
-	Login - Implementar "Redefinir senha".
-	Login - Aviso de usuario ou senha incorretos aparecem em ingles.
-
-	PLR - Criar interface referentes a PLR.
-
-	Indicadores - Impossivel acessar "Responsáveis" de anos anteriores.
-	Indicadores - Impossivel acessar "Previsto/Realizado" de anos anteriores.
-	Indicadores - Cesta - Clicar em apagar mostra a aba daquele indicador ao lado.
-	Indicadores - Bloquear edição da opção "Cesta".
-	Indicadores - Indicador que faz parte de uma cesta pode possuir responsaveis???
-	Indicadores - Peso de cesta aceita numero negatico.
-
-	Dashboard - Mudar periodo não atualiza o dashboard.
-	Dashboard - Varios erros na mudança de Periodo, referencia e usuario.
-	Dashboard - Referencia deveria começar com o mês atual, atualmente começa em dezembro.
-	Dashboard - Colocar embaixo da detalhação de indicadores um "Não há registro de indicadores" quando vazio.
-	Dashboard - Como vai ter muitos usuarios, separar usuarios de departamentos no filtro OU colocar departamento primeiro.
-	Dashboard - Mostrar Usuarios em ordem alfabetica???
-	Dashboard - Data em "Acumulado" comportando de forma estranha???
-	Dashboard - Tem hora que o dasboard não atualiza???
-
-
 Back-End:
 
 	
@@ -59,10 +23,6 @@ Back-End:
 
 	PLR - Calcular os valores referentes a PLR.
 
-	Indicadores - Regras não condizem com as regras estabelecidas pelo setor de processos.
-
-	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador; 
-
 	Concluido:
 
 	API de indicadores modificada. Agora é necessario passar periodo para acesso de um indicador;
@@ -72,3 +32,9 @@ Back-End:
 	Não é mais possivel deletar departamento, campo departamento inativo adicionado;
 	Não é mais possivel deletar usuario, campo usuario inativo adicionado;
 	Não é mais possivel deletar periodo, campo periodo inativo adicionado;
+	Supervisor bloqueado de deletar indicadores;
+	Adicionado propriedade "closed" a período. Padrão "period.closed = false";
+	Retorno de acesso negado ao tentar modificar ou remover um período com "period.closed = true";
+	Retorno de acesso negado ao tentar adicionar ou remover um responsável com "period.closed = true";
+	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador;
+	Adicionado limite que um indicador pode atingir em percent;

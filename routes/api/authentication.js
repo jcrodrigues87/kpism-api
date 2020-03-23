@@ -120,7 +120,7 @@ router.post('/forgot_password', async (req, res, next) => {
         });
       }
 
-      return res.send();
+      return res.status(200).json({ok: 'ok'});
     });
   } catch (err) {
     return next(err);
@@ -165,11 +165,9 @@ router.post('/reset_password', async (req, res) => {
 
     user.setPassword(password);
 
-    console.log({user});
-
     await user.save();
 
-    res.send();
+    return res.status(200).json({ok: 'ok'});
   } catch (err) {
     return next(err);
   }

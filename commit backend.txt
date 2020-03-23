@@ -1,4 +1,0 @@
-Supervisor bloqueado de deletar indicadores;
-Adicionado propriedade "closed" a período. Padrão "period.closed = false";
-Retorno de acesso negado ao tentar modificar ou remover um período com "period.closed = true";
-Retorno de acesso negado ao tentar adicionar ou remover um responsável com "period.closed = true";
