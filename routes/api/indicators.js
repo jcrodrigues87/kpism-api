@@ -93,12 +93,13 @@ router.get('/:periodId/:indicatorId', async (req, res, next) => {
 
     if (period && indicator) {
 
-      if (indicator.basket == true)
-        indicator = await updateActualBasket(indicator);
+      // if (indicator.basket == true)
+      //   indicator = await updateActualBasket(indicator);
       return res.json({ indicator: indicator.toCrudJSON() });
     } else
       return res.sendStatus(404);
   } catch (err) {
+    console.log(err)
     return next(err);
   }
 });
