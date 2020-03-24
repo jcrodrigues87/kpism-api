@@ -11,8 +11,7 @@ router.get('/:indicatorRefId', async (req, res, next) => {
     const indicatorRef = await Indicator.findById(req.params.indicatorRefId);
 
     if (indicatorRef) {
-      const basket = await Basket.findOne({indicatorRef: indicatorRef}).populate('indicators.indicator')
-      
+      const basket = await Basket.findOne({indicatorRef: indicatorRef}).populate('basketItems.indicator')
       return res.json({ basket: basket.toCrudJSON() });
     } else
       return res.sendStatus(404);
@@ -23,17 +22,16 @@ router.get('/:indicatorRefId', async (req, res, next) => {
 
 // update basket list
 router.put('/:indicatorRefId', async (req, res, next) => {
-  console.log(req.body)
   try {
     const indicatorRef = await Indicator.findById(req.params.indicatorRefId).populate(['period']);
-    const basket = await Basket.findOne({indicatorRef: indicatorRef});
+    var basket = await Basket.findOne({indicatorRef: indicatorRef}).populate('basketItems.indicator')
     const period = await Period.findOne({_id: indicatorRef.period._id});
-    
     if (indicatorRef && basket) {
       if (period.closed === false) {
-        basket.indicators = req.body.indicators;
+        basket.basketItems = req.body.basketItems;
         await basket.save();
 
+        basket = await Basket.findOne({indicatorRef: indicatorRef}).populate('basketItems.indicator')
         return res.json({ basket: basket.toCrudJSON() });
       } else
         return res.sendStatus(403);
@@ -53,9 +51,9 @@ router.delete('/:indicatorRefId/:indicatorId', async (req, res, next) => {
     const basket = await Basket.findOne({indicatorRef: indicatorRef});
     if (indicatorRef && indicator && basket) {
       if (period.closed === false) {
-        for (i = 0; i < basket.indicators.length; i++) {
-          if (basket.indicators[i].indicator.toString() == indicator._id.toString()) {
-            const removed = basket.indicators.splice(i, 1);
+        for (i = 0; i < basket.basketItems.length; i++) {
+          if (basket.basketItems[i].indicator.toString() == indicator._id.toString()) {
+            const removed = basket.basketItems.splice(i, 1);
             basket.save();
             return res.sendStatus(204);
           }

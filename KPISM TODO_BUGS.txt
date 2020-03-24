@@ -38,3 +38,14 @@ Back-End:
 	Retorno de acesso negado ao tentar adicionar ou remover um responsável com "period.closed = true";
 	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador;
 	Adicionado limite que um indicador pode atingir em percent;
+
+	Remodelagem API:
+
+	Users - OK
+	Department - OK
+	Period - OK
+	Indicator - OK
+	Metering - OK
+	Basket - OK
+	Contract - Olhar
+	Contract_Indicator - Olhar

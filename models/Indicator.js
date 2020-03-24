@@ -80,11 +80,25 @@ const IndicatorSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 IndicatorSchema.methods.toCrudJSON = function() {
+  var meteringList = [];
+  for (var i = 0; i < this.metering.length; i++) {
+    meteringList.push(
+      {
+        id: this.metering[i]._id,
+        refOrder: this.metering[i].refOrder,
+        refName: this.metering[i].refName,
+        target: this.metering[i].target,
+        actual: this.metering[i].actual,
+        difference: this.metering[i].difference,
+        percent: this.metering[i].percent
+      }
+    )
+  }
   return {
     id: this.id,
     name: this.name,
     description: this.description,
-    period: this.period ? this.period.toCrudJSON() : undefined,
+    period: this.period ? { id: this.period.id, name: this.period.name, year: this.period.year } : undefined,
     department: this.department ? { id: this.department.id, name: this.department.name } : undefined,
     measure: this.measure,
     accumulatedType: this.accumulatedType,
@@ -92,9 +106,38 @@ IndicatorSchema.methods.toCrudJSON = function() {
     classification: this.classification,
     limit: this.limit,
     basket: this.basket,
-    metering: this.metering,
+    metering: meteringList,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
+  }
+}
+
+IndicatorSchema.methods.toBasketJSON = function() {
+  var meteringList = [];
+  for (var i = 0; i < this.metering.length; i++) {
+    meteringList.push(
+      {
+        id: this.metering[i]._id,
+        refOrder: this.metering[i].refOrder,
+        refName: this.metering[i].refName,
+        target: this.metering[i].target,
+        actual: this.metering[i].actual,
+        difference: this.metering[i].difference,
+        percent: this.metering[i].percent
+      }
+    )
+  }
+  return {
+    id: this.id,
+    name: this.name,
+    description: this.description,
+    measure: this.measure,
+    accumulatedType: this.accumulatedType,
+    orientation: this.orientation,
+    classification: this.classification,
+    limit: this.limit,
+    basket: this.basket,
+    metering: meteringList,
   }
 }
 

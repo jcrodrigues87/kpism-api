@@ -18,9 +18,9 @@ updateActualBasket = async (indicator) => { // calc metering of a basket
 
   for (month = 0; month < 12; month++) { // for each month of meterings
     var actual = 0;
-    for (i = 0; i < basket.indicators.length; i++) { // for each indicator in the basket
-      var indicatorMetering = await Indicator.findById(basket.indicators[i].indicator)
-      actual += (indicatorMetering.metering[month].percent * basket.indicators[i].weight / 100)
+    for (i = 0; i < basket.basketItems.length; i++) { // for each indicator in the basket
+      var indicatorMetering = await Indicator.findById(basket.basketItems[i].indicator)
+      actual += (indicatorMetering.metering[month].percent * basket.basketItems[i].weight / 100)
     }  
     target = indicator.metering[month].target;
     if (indicator.orientation === 'higher') {
@@ -69,6 +69,7 @@ router.post('/:periodId', async (req, res, next) => {
         if (req.body.indicator.basket == true) {
           const basket = new Basket();
           basket.indicatorRef = indicator._id
+          basket.basketItems = []
           await basket.save();
         }
 
@@ -123,7 +124,7 @@ router.get('/:periodId', async (req, res, next) => {
 router.put('/:periodId/:indicatorId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
-    const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
+    const indicator = await Indicator.findById(req.params.indicatorId).populate(['period', 'department']);
 
     if (period && indicator) {
       const { name, description, measure, accumulatedType, orientation, classification, limit, department, metering } = req.body.indicator;
@@ -201,7 +202,7 @@ router.delete('/:periodId/:indicatorId', async (req, res, next) => {
 router.put('/meterings/:periodId/:indicatorId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
-    var indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
+    var indicator = await Indicator.findById(req.params.indicatorId).populate(['period', 'department']);
 
     if (period && indicator) {
       if (period.closed === false) {

@@ -18,16 +18,26 @@ const BasketSchema = new mongoose.Schema({
     ref: 'Indicator',
     required: [true, "can't be blank"]
   },
-  indicators: {
+  basketItems: {
     type: [ BasketItemSchema ]
   }
 }, { timestamps: true });
 
 BasketSchema.methods.toCrudJSON = function() {
+  var basketItemList = [];
+  for (var i = 0; i < this.basketItems.length; i++) {
+    basketItemList.push(
+      {
+        id: this.basketItems[i]._id,
+        weight: this.basketItems[i].weight,
+        indicator: this.basketItems[i].indicator.toBasketJSON()
+      }
+    )
+  }
   return {
     id: this.id,
     indicatorRef: this.indicatorRef,
-    indicators: this.indicators,
+    basketItems: basketItemList,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }

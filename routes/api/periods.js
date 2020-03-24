@@ -89,28 +89,3 @@ router.delete('/:periodId', async (req, res, next) => {
 });
 
 module.exports = router;
-
-// // get period data, access by admin only **************************************
-// router.get('/:periodId/references', async (req, res, next) => {
-//   try {
-//     const period = await Period.findById(req.params.periodId);
-//     if (period) {
-//       const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-//                           "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-//       let begin = new Date(period.begin + ' 00:00:00'), 
-//           end = new Date(period.end + ' 00:00:00'),
-//           refs = [];
-//       while (begin <= end) {
-//         ref = {};
-//         ref.refOrder = begin.getMonth() + 1;
-//         ref.refName = monthNames[begin.getMonth()] + '/' + begin.getFullYear();
-//         refs.push(ref);
-//         begin.setMonth(begin.getMonth() + 1);
-//       }
-//       return res.json({ references: refs });
-//     } else 
-//       return res.sendStatus(404);
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
