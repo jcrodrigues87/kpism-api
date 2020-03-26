@@ -179,13 +179,12 @@ router.delete('/:periodId/:indicatorId', async (req, res, next) => {
         const contractIndicator = await ContractIndicator.deleteMany({indicator: indicator._id}); // if indicator is deleted, indicator inside contracts must be deleted too
         const basketRef = await Basket.deleteMany({indicatorRef: indicator._id}); // if indicator is deleted, the basket that it is root must be deleted too
         const basket = await Basket.deleteMany({indicator: indicator._id}); // if indicator is deleted, the basket that it is leaf must be deleted too
-      
+        return res.sendStatus(204);
       } else 
         return res.sendStatus(403);
     } else
       return res.sendStatus(404)
-
-    return res.sendStatus(204);
+      
   } catch (err) {
     return next(err);
   }

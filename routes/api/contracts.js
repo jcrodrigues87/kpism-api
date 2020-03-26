@@ -5,29 +5,6 @@ const Contract_Indicator = require('../../models/ContractIndicator');
 const User = require('../../models/User');
 const Period = require('../../models/Period');
 
-router.post('/:contractId/:indicatorId/:weight', async (req, res, next) => {
-  try {
-    const contract = await Contract.findById(req.params.contractId);
-    const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
-    if (contract && indicator) {
-      if (indicator.period.closed == false) {
-        const user = await User.findById(contract.user._id);
-        var contract_indicator = new Contract_Indicator();
-        contract_indicator.weight = req.params.weight;
-        contract_indicator.contract = contract;
-        contract_indicator.indicator = indicator;
-        contract_indicator.user = user;
-        await contract_indicator.save();
-        return res.json({ contract_indicator: contract_indicator.toCrudJSON() });
-      } else
-        return res.sendStatus(403)
-    } else
-      return res.sendStatus(404)
-  } catch (err) {
-    return next(err);
-  }
-});
-
 // get contract data by user/period
 router.get('/:userId/:periodId', async (req, res, next) => {
   try {

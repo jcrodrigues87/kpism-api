@@ -39,13 +39,9 @@ Back-End:
 	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador;
 	Adicionado limite que um indicador pode atingir em percent;
 
-	Remodelagem API:
+	Commit atual:
 
-	Users - OK
-	Department - OK
-	Period - OK
-	Indicator - OK
-	Metering - OK
-	Basket - OK
-	Contract - Olhar
-	Contract_Indicator - Olhar
+	Corrigido toCrudJson de todos os modelos para devolver "id" no lugar de "_id";
+	Criado API para Contratos;
+	Criado API para Contratos_Indicadores;
+	Definido autorização de Cesta, Contratos e Indicadores;

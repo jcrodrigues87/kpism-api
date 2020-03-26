@@ -52,8 +52,8 @@ const ContractSchema = new mongoose.Schema({
 ContractSchema.methods.toCrudJSON = function() {
   return {
     id: this.id,
-    period: this.period ? this.period.toCrudJSON() : undefined,
-    user: this.user ? this.user.toProfileJSON() : undefined,
+    period: this.period ? { id: this.period.id, name: this.period.name, year: this.period.year } : undefined,
+    user: this.user.id,
     salary: this.salary,
     proportionalPeriod: this.proportionalPeriod,
     bonus: this.bonus,

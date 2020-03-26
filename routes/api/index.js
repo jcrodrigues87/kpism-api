@@ -9,6 +9,7 @@ router.use('/baskets', require('./baskets'));
 router.use('/auth', require('./authentication'));
 router.use('/profiles', require('./profiles'));
 router.use('/contracts', require('./contracts'));
+router.use('/contract_indicators', require('./contract_indicators'));
 
 // catch validation errors
 router.use((err, req, res, next) => {

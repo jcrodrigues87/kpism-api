@@ -25,7 +25,7 @@ const ContractIndicatorSchema = new mongoose.Schema({
 ContractIndicatorSchema.methods.toCrudJSON = function() {
   return {
     id: this.id,
-    indicator: this.indicator.id,
+    indicator: this.indicator.toCrudJSON(),
     contract: this.contract.id,
     user: this.user.id,
     weight: this.weight,
