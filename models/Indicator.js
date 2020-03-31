@@ -34,6 +34,14 @@ const IndicatorSchema = new mongoose.Schema({
     type: String,
     required: [true, "can't be blank"]
   },
+  equation: {
+    type: String,
+    required: [true, "can't be blank"]
+  },
+  evaluation: {
+    type: String,
+    required: [true, "can't be blank"]
+  },
   period: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Period',
@@ -98,6 +106,8 @@ IndicatorSchema.methods.toCrudJSON = function() {
     id: this.id,
     name: this.name,
     description: this.description,
+    equation: this.equation,
+    evaluation: this.evaluation,
     period: this.period.name ? { id: this.period.id, name: this.period.name, year: this.period.year } : undefined,
     department: this.department.name ? { id: this.department.id, name: this.department.name } : undefined,
     measure: this.measure,
@@ -131,6 +141,8 @@ IndicatorSchema.methods.toBasketJSON = function() {
     id: this.id,
     name: this.name,
     description: this.description,
+    equation: this.equation,
+    evaluation: this.evaluation,
     measure: this.measure,
     accumulatedType: this.accumulatedType,
     orientation: this.orientation,

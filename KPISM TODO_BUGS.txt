@@ -1,6 +1,6 @@
 Back-End:
 
-	
+	Cesta com problema. se deletar um indicador que ta nela gera inconsistencia
 
 	Department - OK
 	Period - GET Period Reference - TA USANDO???
@@ -16,8 +16,7 @@ Back-End:
 	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 	
 	API - Bloquear alterações fora do periodo vigente.
-
-	Metering - API get metering não deve criar metering para indicador que seja uma cesta.
+	API - Bloquear alterações em meses bloqueados.
 
 	Cesta - Cesta não calcula valores no dashboard.
 
@@ -38,10 +37,15 @@ Back-End:
 	Retorno de acesso negado ao tentar adicionar ou remover um responsável com "period.closed = true";
 	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador;
 	Adicionado limite que um indicador pode atingir em percent;
-
-	Commit atual:
-
 	Corrigido toCrudJson de todos os modelos para devolver "id" no lugar de "_id";
 	Criado API para Contratos;
 	Criado API para Contratos_Indicadores;
 	Definido autorização de Cesta, Contratos e Indicadores;
+
+	Backend - Commit atual:
+
+	Corrigido integridade da cesta quando deletar um indicador que faz parte dela;
+	Atualizado formula de Planejado/Realizado;
+	Adicionado Equação (equation) e Metodo de Aferição (evaluation) em indicadores; 
+
+	

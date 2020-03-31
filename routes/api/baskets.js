@@ -11,7 +11,16 @@ router.get('/:indicatorRefId', async (req, res, next) => {
     const indicatorRef = await Indicator.findById(req.params.indicatorRefId);
 
     if (indicatorRef) {
-      const basket = await Basket.findOne({indicatorRef: indicatorRef}).populate('basketItems.indicator')
+      var basket = await Basket.findOne({indicatorRef: indicatorRef})
+      for (var i = 0; i < basket.basketItems.length; i++) { // check if each indicator still exists
+        var indicator = await Indicator.findById(basket.basketItems[i].indicator._id)
+        if (!indicator) {
+          basket.basketItems.splice(i, 1);
+          i -= 1;
+        }
+      } 
+      await basket.save();
+      basket = await Basket.findOne({indicatorRef: indicatorRef}).populate('basketItems.indicator');
       return res.json({ basket: basket.toCrudJSON() });
     } else
       return res.sendStatus(404);

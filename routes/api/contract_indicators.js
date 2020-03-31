@@ -50,7 +50,7 @@ router.put('/:contractId/:indicatorId/:weight', async (req, res, next) => {
     const indicator = await Indicator.findById(req.params.indicatorId).populate(['period']);
     if (contract && indicator) {
       if (indicator.period.closed == false) {
-        const contract_indicator = await Contract_Indicator.findOneAndUpdate({indicator: indicator, contract: contract}).populate(['indicator', 'contract', 'user']);
+        const contract_indicator = await Contract_Indicator.findOne({indicator: indicator.id, contract: contract.id}).populate(['indicator', 'contract', 'user']);
         if (req.params.weight)
           contract_indicator.weight = req.params.weight;
         await contract_indicator.save();

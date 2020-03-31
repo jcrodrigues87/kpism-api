@@ -63,7 +63,7 @@
         "action": "allow"
       },
       {
-        "resource": "/contrat_indicators/*",
+        "resource": "/contract_indicators/*",
         "methods": "*",
         "action": "allow"
       },
@@ -153,12 +153,12 @@
         "action": "deny"
       },
       {
-        "resource": "/contrat_indicators/*",
+        "resource": "/contract_indicators/*",
         "methods": ["GET"],
         "action": "allow"
       },  
       {
-        "resource": "/contrat_indicators/*",
+        "resource": "/contract_indicators/*",
         "methods": ["POST","PUT","DELETE"],
         "action": "deny"
       },

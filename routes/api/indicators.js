@@ -7,6 +7,28 @@ const ContractIndicator = require('../../models/ContractIndicator')
 
 const moment = require('moment');
 
+calcMetering = async (target, actual, orientation) => {
+  if (orientation === 'higher') {
+    difference = actual - target;
+    percent =  target ? (actual / target) * 100 : 0;
+    if (target == 0) {
+      percent = actual * 100; 
+    }
+  }
+  if (orientation === 'lower') {
+    difference = target - actual;
+    percent = actual ? (target / actual) * 100 : 0;
+    if (actual == 0) {
+      percent = target * 100;
+    }
+  }
+  if (target == 0 && actual == 0) {
+    difference = 0;
+    percent = 100;
+  }
+  return ({difference: difference, percent: percent})
+}
+
 applyLimit = async (indicator, percent) => { // apply a upper limit in metering percent
   if (percent > indicator.limit)
     percent = indicator.limit;
@@ -23,14 +45,7 @@ updateActualBasket = async (indicator) => { // calc metering of a basket
       actual += (indicatorMetering.metering[month].percent * basket.basketItems[i].weight / 100)
     }  
     target = indicator.metering[month].target;
-    if (indicator.orientation === 'higher') {
-      difference = actual - target;
-      percent =  target ? (actual / target) * 100 : 0;
-    }
-    if (indicator.orientation === 'lower') {
-      difference = target - actual;
-      percent = actual ? (target / actual) * 100 : 0;
-    }
+    const { difference, percent } = await calcMetering(target, actual, indicator.orientation);
     indicator.metering[month].actual = actual;
     indicator.metering[month].difference = difference;
     indicator.metering[month].percent = await applyLimit(indicator, percent); 
@@ -62,7 +77,7 @@ router.post('/:periodId', async (req, res, next) => {
         // create metering
         const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         for (var i = 1; i <= 12; i++) {
-          indicator.metering.push({refOrder: i, refName: monthNames[i-1]})
+          indicator.metering.push({refOrder: i, refName: monthNames[i-1], percent: 100})
         }
 
         // create basket
@@ -100,7 +115,6 @@ router.get('/:periodId/:indicatorId', async (req, res, next) => {
     } else
       return res.sendStatus(404);
   } catch (err) {
-    console.log(err)
     return next(err);
   }
 });
@@ -127,7 +141,7 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
     const indicator = await Indicator.findById(req.params.indicatorId).populate(['period', 'department']);
 
     if (period && indicator) {
-      const { name, description, measure, accumulatedType, orientation, classification, limit, department, metering } = req.body.indicator;
+      const { name, description, equation, evaluation, measure, accumulatedType, orientation, classification, limit, department, metering } = req.body.indicator;
 
       if (period.closed === false) {
 
@@ -135,6 +149,10 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
           indicator.name = name;
         if (description !== undefined)
           indicator.description = description;
+        if (equation !== undefined)
+          indicator.equation = equation;
+        if (evaluation !== undefined)
+          indicator.evaluation = evaluation;
         if (measure !== undefined)
           indicator.measure = measure;
         if (accumulatedType !== undefined)
@@ -165,8 +183,7 @@ router.put('/:periodId/:indicatorId', async (req, res, next) => {
   }
 });
 
-// TESTAR INTEGRIDADE *****************************************************************
-// delete indicator data, access by Admin
+// delete indicator data, access by supervisor
 router.delete('/:periodId/:indicatorId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId)
@@ -223,14 +240,7 @@ router.put('/meterings/:periodId/:indicatorId', async (req, res, next) => {
           for (var i = 0; i < 12; i++) {
             
             const { target, actual } = meterings[i];
-            if (indicator.orientation === 'higher') {
-              difference = actual - target;
-              percent =  target ? (actual / target) * 100 : 0;
-            }
-            if (indicator.orientation === 'lower') {
-              difference = target - actual;
-              percent = actual ? (target / actual) * 100 : 0;
-            }
+            const { difference, percent } = await calcMetering(target, actual, indicator.orientation);
             indicator.metering[i].actual = actual;
             indicator.metering[i].target = target;
             indicator.metering[i].difference = difference;
