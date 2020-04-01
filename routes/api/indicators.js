@@ -4,6 +4,7 @@ const Period = require('../../models/Period');
 const Department = require('../../models/Department');
 const Basket = require('../../models/Basket');
 const ContractIndicator = require('../../models/ContractIndicator')
+const updateActualBasket = require('../../modules/updateBasket');
 
 const moment = require('moment');
 
@@ -35,24 +36,6 @@ applyLimit = async (indicator, percent) => { // apply a upper limit in metering 
   return percent;
 }
 
-updateActualBasket = async (indicator) => { // calc metering of a basket 
-  const basket = await Basket.findOne({indicatorRef: indicator});
-
-  for (month = 0; month < 12; month++) { // for each month of meterings
-    var actual = 0;
-    for (i = 0; i < basket.basketItems.length; i++) { // for each indicator in the basket
-      var indicatorMetering = await Indicator.findById(basket.basketItems[i].indicator)
-      actual += (indicatorMetering.metering[month].percent * basket.basketItems[i].weight / 100)
-    }  
-    target = indicator.metering[month].target;
-    const { difference, percent } = await calcMetering(target, actual, indicator.orientation);
-    indicator.metering[month].actual = actual;
-    indicator.metering[month].difference = difference;
-    indicator.metering[month].percent = await applyLimit(indicator, percent); 
-  }
-  return (indicator);
-}
-
 ///////////////////////////////////////////////////
 //
 // INDICATOR
@@ -77,7 +60,10 @@ router.post('/:periodId', async (req, res, next) => {
         // create metering
         const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         for (var i = 1; i <= 12; i++) {
-          indicator.metering.push({refOrder: i, refName: monthNames[i-1], percent: 100})
+          if (req.body.indicator.basket == true)
+            indicator.metering.push({refOrder: i, refName: monthNames[i-1], target: 100, actual: 0, difference: -100, percent: 0})
+          else
+            indicator.metering.push({refOrder: i, refName: monthNames[i-1], target: 0, actual: 0, difference: 0, percent: 100})
         }
 
         // create basket
@@ -105,12 +91,12 @@ router.post('/:periodId', async (req, res, next) => {
 router.get('/:periodId/:indicatorId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
-    const indicator = await Indicator.findById(req.params.indicatorId).populate(['department', 'period']);
+    var indicator = await Indicator.findById(req.params.indicatorId).populate(['department', 'period']);
 
     if (period && indicator) {
 
-      // if (indicator.basket == true)
-      //   indicator = await updateActualBasket(indicator);
+      if (indicator.basket == true)
+        indicator = await updateActualBasket(indicator);
       return res.json({ indicator: indicator.toCrudJSON() });
     } else
       return res.sendStatus(404);

@@ -97,7 +97,8 @@ UserSchema.methods.toProfileJSON = function() {
     name: this.name,
     email: this.email,
     role: this.role,
-    department: this.department
+    inactive: this.inactive,
+    department: this.department ? {id: this.department.id, name: this.department.name} : undefined,
   }
 }
 

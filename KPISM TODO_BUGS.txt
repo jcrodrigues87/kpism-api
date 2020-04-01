@@ -1,24 +1,9 @@
 Back-End:
 
-	Cesta com problema. se deletar um indicador que ta nela gera inconsistencia
-
-	Department - OK
-	Period - GET Period Reference - TA USANDO???
-	User - OK
-	Contract - OK
-	Indicator - 
-		Testar integridade DELETE
-		Get by Contract
-		Get by Department
-	Metering - OK ???
-	Basket - OK ???
-
 	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 	
 	API - Bloquear alterações fora do periodo vigente.
 	API - Bloquear alterações em meses bloqueados.
-
-	Cesta - Cesta não calcula valores no dashboard.
 
 	PLR - Calcular os valores referentes a PLR.
 
@@ -41,11 +26,15 @@ Back-End:
 	Criado API para Contratos;
 	Criado API para Contratos_Indicadores;
 	Definido autorização de Cesta, Contratos e Indicadores;
-
-	Backend - Commit atual:
-
 	Corrigido integridade da cesta quando deletar um indicador que faz parte dela;
 	Atualizado formula de Planejado/Realizado;
 	Adicionado Equação (equation) e Metodo de Aferição (evaluation) em indicadores; 
+
+	Backend - Commit atual:
+
+	updateActualBasket movido para para /modules/updateBasket.js;
+	Get Contract_Indicator e Indicator aciona updateActualBasket;
+	Adicionado inactive em toProfileJson;
+	Removido chart.ts;
 
 	

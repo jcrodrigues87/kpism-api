@@ -261,8 +261,6 @@ GET {{url}}/api/auth
 
 ### Profile
 
-### Chart
-
 ### Indicator
 
 Object

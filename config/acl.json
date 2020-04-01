@@ -76,11 +76,6 @@
         "resource": "/periods/*",
         "methods": ["POST","PUT","DELETE"],
         "action": "deny"
-      },
-      {
-        "resource": "/charts/*",
-        "methods": ["GET"],
-        "action": "allow"
       }
     ]
   },
@@ -161,11 +156,6 @@
         "resource": "/contract_indicators/*",
         "methods": ["POST","PUT","DELETE"],
         "action": "deny"
-      },
-      {
-        "resource": "/charts/*",
-        "methods": ["GET"],
-        "action": "allow"
       }
     ]
   }

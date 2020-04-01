@@ -3,7 +3,7 @@ const Contract = require('../../models/Contract');
 const Indicator = require('../../models/Indicator');
 const Contract_Indicator = require('../../models/ContractIndicator');
 const User = require('../../models/User');
-const Period = require('../../models/Period');
+const updateActualBasket = require('../../modules/updateBasket');
 
 // create contract_indicator, access by supervisor
 router.post('/:contractId/:indicatorId/:weight', async (req, res, next) => {
@@ -35,6 +35,10 @@ router.get('/:contractId', async (req, res, next) => {
     const contract = await Contract.findById(req.params.contractId);
     if (contract) {
       const contract_indicators = await Contract_Indicator.find({contract: contract}).populate(['indicator', 'contract', 'user']);
+      for (var i = 0; i < contract_indicators.length; i++){
+        if (contract_indicators[i].indicator.basket == true)
+          contract_indicators[i].indicator = await updateActualBasket(contract_indicators[i].indicator);
+      }
       return res.json({ contract_indicators: contract_indicators.map(contract_indicator => contract_indicator.toCrudJSON()) });
     } else
       return res.sendStatus(404)

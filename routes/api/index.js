@@ -5,7 +5,6 @@ router.use('/departments', require('./departments'));
 router.use('/periods', require('./periods'));
 router.use('/indicators', require('./indicators'));
 router.use('/baskets', require('./baskets'));
-//router.use('/charts', require('./charts'));
 router.use('/auth', require('./authentication'));
 router.use('/profiles', require('./profiles'));
 router.use('/contracts', require('./contracts'));
