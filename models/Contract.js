@@ -27,7 +27,15 @@ const ContractSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  qualitativeWeight: {
+    type: Number,
+    default: 0
+  },
   quantitative: {
+    type: Number,
+    default: 0
+  },
+  quantitativeWeight: {
     type: Number,
     default: 0
   },
@@ -58,7 +66,9 @@ ContractSchema.methods.toCrudJSON = function() {
     proportionalPeriod: this.proportionalPeriod,
     bonus: this.bonus,
     qualitative: this.qualitative,
+    qualitativeWeight: this.qualitativeWeight,
     quantitative: this.quantitative,
+    quantitativeWeight: this.quantitativeWeight,
     resultContract: this.resultContract,
     plr: this.plr,
     tax: this.tax,

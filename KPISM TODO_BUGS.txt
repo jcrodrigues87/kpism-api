@@ -1,11 +1,20 @@
 Back-End:
 
+
+	TODO:
+
 	Autorização - Remover autorização de DELETE para indicadores do supervisor.
 	
 	API - Bloquear alterações fora do periodo vigente.
 	API - Bloquear alterações em meses bloqueados.
 
 	PLR - Calcular os valores referentes a PLR.
+
+
+	Backend - Commit atual:
+
+	Adicionado qualitativeWeight, referente ao peso da avaliação de desenpenho;
+	Adicionado quantitativeWeight, referente ao peso do contrato de resultados;
 
 	Concluido:
 
@@ -29,12 +38,13 @@ Back-End:
 	Corrigido integridade da cesta quando deletar um indicador que faz parte dela;
 	Atualizado formula de Planejado/Realizado;
 	Adicionado Equação (equation) e Metodo de Aferição (evaluation) em indicadores; 
-
-	Backend - Commit atual:
-
 	updateActualBasket movido para para /modules/updateBasket.js;
 	Get Contract_Indicator e Indicator aciona updateActualBasket;
 	Adicionado inactive em toProfileJson;
 	Removido chart.ts;
+
+	
+
+	
 
 	
