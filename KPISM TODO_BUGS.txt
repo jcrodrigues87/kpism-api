@@ -13,8 +13,10 @@ Back-End:
 
 	Backend - Commit atual:
 
-	Adicionado qualitativeWeight, referente ao peso da avaliação de desenpenho;
-	Adicionado quantitativeWeight, referente ao peso do contrato de resultados;
+	Adicionado department.id em User.ToAuthJson;
+	Adicionado user.populate([department]) em passport.js;
+
+
 
 	Concluido:
 
@@ -42,6 +44,8 @@ Back-End:
 	Get Contract_Indicator e Indicator aciona updateActualBasket;
 	Adicionado inactive em toProfileJson;
 	Removido chart.ts;
+	Adicionado qualitativeWeight, referente ao peso da avaliação de desenpenho;
+	Adicionado quantitativeWeight, referente ao peso do contrato de resultados;
 
 	
 

@@ -85,7 +85,7 @@ UserSchema.methods.toAuthJSON = function() {
     id: this.id,
     name: this.name,
     email: this.email,
-    department: this.department ? this.department.name : undefined,
+    department: this.department ? {id: this.department.id, name: this.department.name} : undefined,
     role: this.role,
     token: this.generateJWT()
   }
