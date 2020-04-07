@@ -22,10 +22,10 @@ router.post('/login', async (req, res, next) => {
   const { email, password } = req.body.user;
 
   if (!email)
-    return res.status(422).json({ errors: { email: "can't be blank" } });
+    return res.status(422).json({ errors: { message: "E-mail não pode ser vazio" } });
 
   if (!password)
-    return res.status(422).json({ errors: { password: "can't be blank" } });
+    return res.status(422).json({ errors: { message: "Senha não pode ser vazia" } });
 
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err)
@@ -47,7 +47,7 @@ router.post('/register', async (req, res, next) => {
 
     if (key !== 'oparin')
       return res.status(403).json({ errors: {
-        message: 'operation not permited'
+        message: 'Operação não permitida'
       }});
 
     if (req.body.user.department && req.body.department.id)
@@ -71,7 +71,7 @@ router.post('/register', async (req, res, next) => {
         return res.json({
           user: user.toCrudJSON(),
           errors: {
-            message: 'welcome email not sent to user'
+            message: 'E-mail inicial não foi enviado ao usuário'
           }
         });
       }
@@ -92,10 +92,10 @@ router.post('/forgot_password', async (req, res, next) => {
     if (!user)
       return res.status(404).json({
         errors: {
-          email: "email not found"
+          message: "E-mail não encontrado"
         }
       });
-
+      
     const token = crypto.randomBytes(20).toString('hex');
 
     const expires = new Date();
@@ -115,7 +115,7 @@ router.post('/forgot_password', async (req, res, next) => {
       if (err) {
         return res.json({
           errors: {
-            message: "forgot password email not sent to user"
+            message: '"Esqueceu sua senha" não enviado ao usuário'
           }
         });
       }
@@ -136,21 +136,21 @@ router.post('/reset_password', async (req, res) => {
     if (!user)
       return res.status(404).json({
         errors: {
-          message: "email not found"
+          message: "E-mail não encontrado"
         }
       });
 
     if (token !== user.passwordResetToken)
       return res.status(401).json({
         errors: {
-          message: "invalid token"
+          message: "Token inválido"
         }
       });
 
       if (!password)
       return res.status(422).json({
         errors: {
-          password: "can't be blank"
+          message: "Senha não pode ser vazia"
         }
       });
 
@@ -159,7 +159,7 @@ router.post('/reset_password', async (req, res) => {
     if (now > user.passwordResetExpires)
       return res.status(400).json({
         errors: {
-          message: "token expired, generate a new one"
+          message: "Token expirado, faça login novamente"
         }
       });
 

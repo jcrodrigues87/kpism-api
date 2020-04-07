@@ -67,7 +67,7 @@ router.get('/:departmentId', async (req, res, next) => {
   try {
     const department = await Department.findById(req.params.departmentId).populate(['manager','childOf']);
 
-    if (department && department.inactive === false)
+    if (department)
       return res.json({ department: department.toCrudJSON() });
     else
       return res.sendStatus(404);

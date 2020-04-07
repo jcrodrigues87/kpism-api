@@ -3,11 +3,11 @@ const mongoose = require('../config/database');
 const DepartmentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Nome não pode ser vazio"]
   },
   description: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Descrição não pode ser vazia"]
   },
   manager: {
     type: mongoose.Schema.Types.ObjectId,

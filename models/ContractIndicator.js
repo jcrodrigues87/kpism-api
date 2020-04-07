@@ -4,21 +4,21 @@ const ContractIndicatorSchema = new mongoose.Schema({
   indicator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Indicator',
-    required: [true, "can't be blank"]
+    required: [true, "Indicador não pode ser vazio"]
   },
   contract: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Contract',
-    required: [true, "can't be blank"]
+    required: [true, "Contrato não pode ser vazio"]
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, "can't be blank"]
+    required: [true, "Usuário não pode ser vazio"]
   },
   weight: {
     type: Number,
-    required: [true, "can't be blank"]
+    required: [true, "Peso não pode ser vazio"]
   },
 }, { timestamps: true });
 

@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
     const user = await User.findOne({ email }).populate(['department']);
 
     if (!user || !user.isValidPassword(password) || user.inactive)
-      return done(null, false, { errors: { 'email or password': 'is invalid' } });
+      return done(null, false, { errors: { emailorpassword: 'E-mail ou senha inválidos' } });
 
     return done(null, user);
   } catch(err) {

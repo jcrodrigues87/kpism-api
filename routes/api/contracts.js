@@ -18,7 +18,7 @@ router.get('/:userId/:periodId', async (req, res, next) => {
           contract = new Contract({user: user, period: period}).populate(['user', 'period']);
           await contract.save();
         } else
-          return res.sendStatus(403)
+          return res.json({ contract: contract });
       }
       return res.json({ contract: contract.toCrudJSON() });
     }

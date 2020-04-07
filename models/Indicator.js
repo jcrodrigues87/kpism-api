@@ -28,55 +28,55 @@ const MeteringSchema = new mongoose.Schema({
 const IndicatorSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Nome não pode ser vazio"]
   },
   description: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Descrição não pode ser vazia"]
   },
   equation: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Equação não pode ser vazia"]
   },
   evaluation: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Instrumento de Aferição não pode ser vazio"]
   },
   period: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Period',
-    required: [true, "can't be blank"]
+    required: [true, "Período não pode ser vazio"]
   },
   department: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department',
-    required: [true, "can't be blank"]
+    required: [true, "Departamento não pode ser vazio"]
   },
   measure: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Medida não pode ser vazia"]
   },
   accumulatedType: {
     type: String,
-    required: [true, "can't be blank"],
+    required: [true, "Tipo de Acumulado não pode ser vazio"],
     lowercase: true,
     enum: ['sum','avg','equalsref']
   },
   orientation: {
     type: String,
-    required: [true, "can't be blank"],
+    required: [true, "Orientação não pode ser vazia"],
     lowercase: true,
     enum: ['higher','lower']
   },
   classification: {
     type: String,
-    required: [true, "can't be blank"],
+    required: [true, "Classificação não pode ser vazia"],
     lowercase: true,
     enum: ['strategic','tactical','operational']
   },
   limit: {
     type: Number,
-    required: [true, "can't be blank"]
+    required: [true, "Limite não pode ser vazio"]
   },
   basket: {
     type: Boolean,

@@ -8,14 +8,14 @@ const secret = require('../config').secret;
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Nome não pode ser vazio"]
   },
   email: {
     type: String,
     unique: true,
-    required: [true, "can't be blank"],
+    required: [true, "E-mail não pode ser vazio"],
     lowercase: true,
-    match: [/\S+@\S+\.\S+/, 'is invalid'],
+    match: [/\S+@\S+\.\S+/, 'E-mail é inválido'],
     index: true
   },
   role: {
@@ -46,7 +46,7 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // plugin validator for unique properties
-UserSchema.plugin(uniqueValidator, { message: 'is alredy taken' });
+UserSchema.plugin(uniqueValidator, { message: 'E-mail já está em uso' });
 
 UserSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
@@ -71,7 +71,7 @@ UserSchema.methods.isValidPassword = function(password) {
 UserSchema.methods.generateJWT = function() {
   let today = new Date();
   let exp = new Date(today);
-  exp.setDate(today.getDate() + 60);
+  exp.setDate(today.getDate() + 1);
 
   return jwt.sign({
     id: this.id,

@@ -10,7 +10,7 @@ let configObj = {
   denyCallback: (res) => {
     return res.status(403).json({
       errors: {
-        message: 'forbiden access'
+        message: 'Acesso negado'
       }
     });
   },

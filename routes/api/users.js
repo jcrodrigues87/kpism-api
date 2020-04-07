@@ -39,7 +39,7 @@ router.post('/', async (req, res, next) => {
         return res.json({
           user: user.toCrudJSON(),
           errors: {
-            message: "welcome email not sent to user"
+            message: "E-mail inicial não enviado ao usuário"
           }
         });
       }

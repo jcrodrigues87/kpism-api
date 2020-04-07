@@ -4,11 +4,11 @@ const BasketItemSchema = new mongoose.Schema({
   indicator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Indicator',
-    required: [true, "can't be blank"]
+    required: [true, "Indicador não pode ser vazio"]
   },
   weight: {
     type: Number,
-    required: [true, "can't be blank"]
+    required: [true, "Peso não pode ser vazio"]
   }
 });
 
@@ -16,7 +16,7 @@ const BasketSchema = new mongoose.Schema({
   indicatorRef: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Indicator',
-    required: [true, "can't be blank"]
+    required: [true, "Indicador não pode ser vazio"]
   },
   basketItems: {
     type: [ BasketItemSchema ]

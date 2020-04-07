@@ -18,7 +18,7 @@ const TaxSchema = new mongoose.Schema({
 const PeriodSchema = new mongoose.Schema({
   year: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Ano não pode ser vazio"]
   },
   companyMultiplier: {
     type: Number,

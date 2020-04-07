@@ -1,21 +1,11 @@
 Back-End:
 
-
 	TODO:
-
-	Autorização - Remover autorização de DELETE para indicadores do supervisor.
-	
-	API - Bloquear alterações fora do periodo vigente.
-	API - Bloquear alterações em meses bloqueados.
 
 	Backend - Commit atual:
 
-	Adicionado tax em periodo para gerenciar imposto de renda na plr;
-	Adicionado dependente em contrato;
-	Adicionado ClosedMonth, para impedir mudanças em um mês encerrado;
-	Removido Name de periodo. Year já faz essa função;
-
-
+	Alterado mensagens de erro para portugues;
+	Alterado getDepartment, agora devolve departamento inativo;
 
 	Concluido:
 
@@ -47,8 +37,7 @@ Back-End:
 	Adicionado quantitativeWeight, referente ao peso do contrato de resultados;
 	Adicionado department.id em User.ToAuthJson;
 	Adicionado user.populate([department]) em passport.js;
-	
-
-	
-
-	
+	Adicionado tax em periodo para gerenciar imposto de renda na plr;
+	Adicionado dependente em contrato;
+	Adicionado ClosedMonth, para impedir mudanças em um mês encerrado;
+	Removido Name de periodo. Year já faz essa função;

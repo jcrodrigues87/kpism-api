@@ -4,12 +4,12 @@ const ContractSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, "can't be blank"]
+    required: [true, "Usuário não pode ser vazio"]
   },
   period: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Period',
-    required: [true, "can't be blank"]
+    required: [true, "Período não pode ser vazio"]
   },
   salary: {
     type: Number,
