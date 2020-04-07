@@ -23,13 +23,17 @@ const ContractSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  dependent: {
+    type: Number,
+    default: 0
+  },
   qualitative: {
     type: Number,
     default: 0
   },
   qualitativeWeight: {
     type: Number,
-    default: 0
+    default: 20
   },
   quantitative: {
     type: Number,
@@ -37,7 +41,7 @@ const ContractSchema = new mongoose.Schema({
   },
   quantitativeWeight: {
     type: Number,
-    default: 0
+    default: 80
   },
   resultContract: {
     type: Number,
@@ -60,11 +64,12 @@ const ContractSchema = new mongoose.Schema({
 ContractSchema.methods.toCrudJSON = function() {
   return {
     id: this.id,
-    period: this.period ? { id: this.period.id, name: this.period.name, year: this.period.year } : undefined,
+    period: this.period ? { id: this.period.id, year: this.period.year } : undefined,
     user: this.user.id,
     salary: this.salary,
     proportionalPeriod: this.proportionalPeriod,
     bonus: this.bonus,
+    dependent: this.dependent,
     qualitative: this.qualitative,
     qualitativeWeight: this.qualitativeWeight,
     quantitative: this.quantitative,

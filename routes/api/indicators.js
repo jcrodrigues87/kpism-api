@@ -212,7 +212,7 @@ router.put('/meterings/:periodId/:indicatorId', async (req, res, next) => {
         if (meterings.length !== 12) // if actual or target is undefined, return bad request
           return res.sendStatus(400);
 
-        if (indicator.basket == true) { // if indicator is basket, will be need a calc of the indicators insede of that basket
+        if (indicator.basket == true) { // if indicator is basket, will be need a calc of the indicators inside of that basket
           
           for (var i = 0; i < 12; i++) {
             const { target } = meterings[i];
@@ -224,13 +224,14 @@ router.put('/meterings/:periodId/:indicatorId', async (req, res, next) => {
 
         } else { // if isn't basket, update and calculate meterings
           for (var i = 0; i < 12; i++) {
-            
-            const { target, actual } = meterings[i];
-            const { difference, percent } = await calcMetering(target, actual, indicator.orientation);
-            indicator.metering[i].actual = actual;
-            indicator.metering[i].target = target;
-            indicator.metering[i].difference = difference;
-            indicator.metering[i].percent = await applyLimit(indicator, percent);
+            if (i >= period.closedMonth ) {
+              const { target, actual } = meterings[i];
+              const { difference, percent } = await calcMetering(target, actual, indicator.orientation);
+              indicator.metering[i].actual = actual;
+              indicator.metering[i].target = target;
+              indicator.metering[i].difference = difference;
+              indicator.metering[i].percent = await applyLimit(indicator, percent);
+            }
           }
           await indicator.save();
           return res.json({ indicator: indicator.toCrudJSON() });

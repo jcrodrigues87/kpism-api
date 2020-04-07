@@ -21,16 +21,20 @@ router.put('/:periodId', async (req, res, next) => {
 
     if (period) {
       if ((period.inactive === false && req.body.period.closed === false) || period.closed === false) { // lock period that is closed or inactive
-        const { name, year, companyMultiplier, closed } = req.body.period;
+        const { year, companyMultiplier, tax, closed, closedMonth } = req.body.period;
 
-        if (name !== undefined)
-          period.name = name;
         if (year !== undefined)
           period.year = year;
         if (companyMultiplier !== undefined)
           period.companyMultiplier = companyMultiplier;
+        if (tax !== undefined)
+          period.tax = tax;
         if (closed !== undefined)
           period.closed = closed;
+        if (closedMonth !== undefined)
+          period.closedMonth = closedMonth;
+        if (closed == true)
+          period.closedMonth = 12;
 
         await period.save();
 
@@ -63,7 +67,7 @@ router.get('/:periodId', async (req, res, next) => {
 // get query periods, access by admin only
 router.get('/', async (req, res, next) => {
   try {
-    const periods = await Period.find({inactive: false}).sort('name');
+    const periods = await Period.find({inactive: false}).sort('year');
 
     return res.json({ periods: periods.map(period => period.toCrudJSON()) });
   } catch (err) {

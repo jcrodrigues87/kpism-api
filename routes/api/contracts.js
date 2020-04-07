@@ -39,13 +39,15 @@ router.put('/:userId/:periodId', async (req, res, next) => {
       if (period.closed == false) {
         const contract = await Contract.findOne({user: user._id, period: period._id}).populate(['user', 'period'])
         if (contract) { // if contract exists
-          const { salary, proportionalPeriod, bonus, qualitative, qualitativeWeight, quantitative, quantitativeWeight, resultContract, plr, tax, finalPlr } = req.body.contract;
+          const { salary, proportionalPeriod, bonus, dependent, qualitative, qualitativeWeight, quantitative, quantitativeWeight, resultContract, plr, tax, finalPlr } = req.body.contract;
           if (salary !== undefined)
             contract.salary = salary;
           if (proportionalPeriod !== undefined)
             contract.proportionalPeriod = proportionalPeriod;
           if (bonus !== undefined)
             contract.bonus = bonus;
+          if (dependent !== undefined)
+            contract.dependent = dependent;
           if (qualitative !== undefined)
             contract.qualitative = qualitative;
           if (qualitativeWeight !== undefined)

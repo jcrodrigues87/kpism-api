@@ -22,7 +22,7 @@ router.post('/login', async (req, res, next) => {
   const { email, password } = req.body.user;
 
   if (!email)
-    return res.status(422).json({ errors: { email: "can't be bland" } });
+    return res.status(422).json({ errors: { email: "can't be blank" } });
 
   if (!password)
     return res.status(422).json({ errors: { password: "can't be blank" } });

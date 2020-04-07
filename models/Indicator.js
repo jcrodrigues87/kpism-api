@@ -108,7 +108,7 @@ IndicatorSchema.methods.toCrudJSON = function() {
     description: this.description,
     equation: this.equation,
     evaluation: this.evaluation,
-    period: this.period.name ? { id: this.period.id, name: this.period.name, year: this.period.year } : undefined,
+    period: this.period.year ? { id: this.period.id, year: this.period.year } : undefined,
     department: this.department.name ? { id: this.department.id, name: this.department.name } : undefined,
     measure: this.measure,
     accumulatedType: this.accumulatedType,

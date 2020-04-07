@@ -8,13 +8,12 @@ Back-End:
 	API - Bloquear alterações fora do periodo vigente.
 	API - Bloquear alterações em meses bloqueados.
 
-	PLR - Calcular os valores referentes a PLR.
-
-
 	Backend - Commit atual:
 
-	Adicionado department.id em User.ToAuthJson;
-	Adicionado user.populate([department]) em passport.js;
+	Adicionado tax em periodo para gerenciar imposto de renda na plr;
+	Adicionado dependente em contrato;
+	Adicionado ClosedMonth, para impedir mudanças em um mês encerrado;
+	Removido Name de periodo. Year já faz essa função;
 
 
 
@@ -46,7 +45,8 @@ Back-End:
 	Removido chart.ts;
 	Adicionado qualitativeWeight, referente ao peso da avaliação de desenpenho;
 	Adicionado quantitativeWeight, referente ao peso do contrato de resultados;
-
+	Adicionado department.id em User.ToAuthJson;
+	Adicionado user.populate([department]) em passport.js;
 	
 
 	
