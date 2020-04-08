@@ -119,12 +119,12 @@
       },
       {
         "resource": "/indicators/*",
-        "methods": ["GET"],
+        "methods": ["GET", "PUT"],
         "action": "allow"
       },
       {
         "resource": "/indicators/*",
-        "methods": ["POST","PUT","DELETE"],
+        "methods": ["POST","DELETE"],
         "action": "deny"
       },
       {

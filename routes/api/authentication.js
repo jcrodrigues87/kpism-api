@@ -95,7 +95,14 @@ router.post('/forgot_password', async (req, res, next) => {
           message: "E-mail não encontrado"
         }
       });
-      
+    if (user.inactive) {
+      return res.status(403).json({
+        errors: {
+          message: "Usuário não tem autorização para acessar o sistema"
+        }
+      });
+    }
+
     const token = crypto.randomBytes(20).toString('hex');
 
     const expires = new Date();

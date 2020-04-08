@@ -4,8 +4,8 @@ Back-End:
 
 	Backend - Commit atual:
 
-	Alterado mensagens de erro para portugues;
-	Alterado getDepartment, agora devolve departamento inativo;
+	Usuario agora tem autorização para dar PUT em indicadores. Para que possa ser possivel alterar o realizado em dashboard;
+	Usuario inativo não agora pode interagir com "Esqueceu sua senha"; 
 
 	Concluido:
 
@@ -41,3 +41,5 @@ Back-End:
 	Adicionado dependente em contrato;
 	Adicionado ClosedMonth, para impedir mudanças em um mês encerrado;
 	Removido Name de periodo. Year já faz essa função;
+	Alterado mensagens de erro para portugues;
+	Alterado getDepartment, agora devolve departamento inativo;
