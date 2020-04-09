@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../../models/User');
 const passport = require('passport');
 const mailer = require('../../modules/mailer');
-const crypto = require('crypto');
+const genPass = require('generate-password');
 
 router.get('', async (req, res, next) => {
   try {
@@ -63,9 +63,9 @@ router.post('/register', async (req, res, next) => {
 
     mailer.sendMail({
       to: user.email,
-      from: 'admin@company.com',
+      from: 'ti@canex.com.br',
       template: 'new_user',
-      context: { password }
+      context: { password },
     }, (err) => {
       if (err) {
         return res.json({
@@ -103,7 +103,7 @@ router.post('/forgot_password', async (req, res, next) => {
       });
     }
 
-    const token = crypto.randomBytes(20).toString('hex');
+    const token = genPass.generate({length: 6, symbols: false, uppercase: false, numbers: true});
 
     const expires = new Date();
     expires.setTime(expires.getTime() + (3600000));
@@ -115,7 +115,7 @@ router.post('/forgot_password', async (req, res, next) => {
 
     mailer.sendMail({
       to: email,
-      from: 'admin@company.com',
+      from: 'ti@canex.com.br',
       template: 'forgot_password',
       context: { token }
     }, (err) => {

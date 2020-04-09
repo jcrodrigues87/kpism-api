@@ -22,6 +22,10 @@ const MeteringSchema = new mongoose.Schema({
     percent: {
       type: Number,
       default: 0
+    },
+    inactive: {
+      type: Boolean,
+      default: false
     }
 });
 
@@ -98,7 +102,8 @@ IndicatorSchema.methods.toCrudJSON = function() {
         target: this.metering[i].target,
         actual: this.metering[i].actual,
         difference: this.metering[i].difference,
-        percent: this.metering[i].percent
+        percent: this.metering[i].percent,
+        inactive: this.metering[i].inactive
       }
     )
   }
@@ -133,7 +138,8 @@ IndicatorSchema.methods.toBasketJSON = function() {
         target: this.metering[i].target,
         actual: this.metering[i].actual,
         difference: this.metering[i].difference,
-        percent: this.metering[i].percent
+        percent: this.metering[i].percent,
+        inactive: this.metering[i].inactive
       }
     )
   }

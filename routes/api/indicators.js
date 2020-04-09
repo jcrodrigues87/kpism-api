@@ -61,9 +61,9 @@ router.post('/:periodId', async (req, res, next) => {
         const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         for (var i = 1; i <= 12; i++) {
           if (req.body.indicator.basket == true)
-            indicator.metering.push({refOrder: i, refName: monthNames[i-1], target: 100, actual: 0, difference: -100, percent: 0})
+            indicator.metering.push({refOrder: i, refName: monthNames[i-1], target: 100, actual: 0, difference: -100, percent: 0, inactive: false})
           else
-            indicator.metering.push({refOrder: i, refName: monthNames[i-1], target: 0, actual: 0, difference: 0, percent: 100})
+            indicator.metering.push({refOrder: i, refName: monthNames[i-1], target: 0, actual: 0, difference: 0, percent: 100, inactive: false})
         }
 
         // create basket
@@ -224,13 +224,14 @@ router.put('/meterings/:periodId/:indicatorId', async (req, res, next) => {
 
         } else { // if isn't basket, update and calculate meterings
           for (var i = 0; i < 12; i++) {
-            if (i >= period.closedMonth ) {
-              const { target, actual } = meterings[i];
+            if (i >= period.closedMonth) {
+              const { target, actual, inactive } = meterings[i];
               const { difference, percent } = await calcMetering(target, actual, indicator.orientation);
               indicator.metering[i].actual = actual;
               indicator.metering[i].target = target;
               indicator.metering[i].difference = difference;
               indicator.metering[i].percent = await applyLimit(indicator, percent);
+              indicator.metering[i].inactive = inactive;
             }
           }
           await indicator.save();
