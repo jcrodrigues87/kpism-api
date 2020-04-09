@@ -1,0 +1,55 @@
+Back-End:
+
+	TODO:
+
+	Arrumar LINKDOSITE nos templates de email quando definir a URL do site;
+	Fazer documentação;
+
+
+	Backend - Commit atual:
+
+
+	Corrigido formula de calculo de metering;
+
+	Concluido:
+
+	API de indicadores modificada. Agora é necessario passar periodo para acesso de um indicador;
+	Adicionado campo classificação ao Indicador. Opções : Estrategico, tatico e operacional;
+	Metricas agora fazem parte de indicador. Fomato: Lista com informações das metricas para cada mês;
+	Classe contrato substitui a classe responsavel. Contrato armazena usuario, periodo, referencia para indicador e informações para calculo da PLR;
+	Não é mais possivel deletar departamento, campo departamento inativo adicionado;
+	Não é mais possivel deletar usuario, campo usuario inativo adicionado;
+	Não é mais possivel deletar periodo, campo periodo inativo adicionado;
+	Supervisor bloqueado de deletar indicadores;
+	Adicionado propriedade "closed" a período. Padrão "period.closed = false";
+	Retorno de acesso negado ao tentar modificar ou remover um período com "period.closed = true";
+	Retorno de acesso negado ao tentar adicionar ou remover um responsável com "period.closed = true";
+	Classe Contrato_Indicador adicionada. Classe responsavel por referenciar um indicador a um contrato e guardar peso do indicador;
+	Adicionado limite que um indicador pode atingir em percent;
+	Corrigido toCrudJson de todos os modelos para devolver "id" no lugar de "_id";
+	Criado API para Contratos;
+	Criado API para Contratos_Indicadores;
+	Definido autorização de Cesta, Contratos e Indicadores;
+	Corrigido integridade da cesta quando deletar um indicador que faz parte dela;
+	Atualizado formula de Planejado/Realizado;
+	Adicionado Equação (equation) e Metodo de Aferição (evaluation) em indicadores; 
+	updateActualBasket movido para para /modules/updateBasket.js;
+	Get Contract_Indicator e Indicator aciona updateActualBasket;
+	Adicionado inactive em toProfileJson;
+	Removido chart.ts;
+	Adicionado qualitativeWeight, referente ao peso da avaliação de desenpenho;
+	Adicionado quantitativeWeight, referente ao peso do contrato de resultados;
+	Adicionado department.id em User.ToAuthJson;
+	Adicionado user.populate([department]) em passport.js;
+	Adicionado tax em periodo para gerenciar imposto de renda na plr;
+	Adicionado dependente em contrato;
+	Adicionado ClosedMonth, para impedir mudanças em um mês encerrado;
+	Removido Name de periodo. Year já faz essa função;
+	Alterado mensagens de erro para portugues;
+	Alterado getDepartment, agora devolve departamento inativo;
+	Usuario agora tem autorização para dar PUT em indicadores. Para que possa ser possivel alterar o realizado em dashboard;
+	Usuario inativo não agora pode interagir com "Esqueceu sua senha"; 
+	Tamanho do token de recuperação de senha reduzido;
+	Adicionado template de email para contas registradas;
+	Adicionado template de email para redefinição de senhas;
+	Adicionado propriedade inativo a metering;

@@ -1,16 +1,11 @@
 const router = require('express').Router();
 const Period = require('../../models/Period');
-const Metering = require('../../models/Metering');
 
-// create a new user, access by admin only
+// create a new period, access by admin only
 router.post('/', async (req, res, next) => {
   try {
-    //console.log(req.body.period.begin);
-
     const period = new Period(req.body.period);
 
-    //period.begin = new Date(req.body.period.begin);
-    //console.log(period.begin)
     await period.save();
 
     return res.json({ period: period.toCrudJSON() });
@@ -19,26 +14,34 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// update user data, acces by admin only
+// update period data, acces by admin only
 router.put('/:periodId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
 
     if (period) {
-      const { name, begin, end } = req.body.period;
+      if ((period.inactive === false && req.body.period.closed === false) || period.closed === false) { // lock period that is closed or inactive
+        const { year, companyMultiplier, tax, closed, closedMonth } = req.body.period;
 
-      if (name !== undefined)
-        period.name = name;
+        if (year !== undefined)
+          period.year = year;
+        if (companyMultiplier !== undefined)
+          period.companyMultiplier = companyMultiplier;
+        if (tax !== undefined)
+          period.tax = tax;
+        if (closed !== undefined)
+          period.closed = closed;
+        if (closedMonth !== undefined)
+          period.closedMonth = closedMonth;
+        if (closed == true)
+          period.closedMonth = 12;
 
-      if (begin !== undefined)
-        period.begin = begin;
+        await period.save();
 
-      if (end !== undefined)
-        period.end = end;
-
-      await period.save();
-
-      return res.json({ period: period.toCrudJSON() });
+        return res.json({ period: period.toCrudJSON() });
+      } else {
+        return res.sendStatus(403);
+      }
     } else {
       return res.sendStatus(404);
     }
@@ -47,12 +50,12 @@ router.put('/:periodId', async (req, res, next) => {
   }
 });
 
-// get user data, access by admin only
+// get period data, access by admin only
 router.get('/:periodId', async (req, res, next) => {
   try {
     const period = await Period.findById(req.params.periodId);
 
-    if (period)
+    if (period && period.inactive === false)
       return res.json({ period: period.toCrudJSON() });
     else
       return res.sendStatus(404);
@@ -61,55 +64,29 @@ router.get('/:periodId', async (req, res, next) => {
   }
 });
 
-// get user data, access by admin only
-router.get('/:periodId/references', async (req, res, next) => {
-  try {
-    const period = await Period.findById(req.params.periodId);
-
-    if (period) {
-      const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-                          "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-
-      let begin = new Date(period.begin + ' 00:00:00'), 
-          end = new Date(period.end + ' 00:00:00'),
-          refs = [];
-
-      while (begin <= end) {
-        ref = {};
-
-        ref.refOrder = begin.getMonth() + 1;
-        ref.refName = monthNames[begin.getMonth()] + '/' + begin.getFullYear();
-
-        refs.push(ref);
-
-        begin.setMonth(begin.getMonth() + 1);
-      }
-
-      return res.json({ references: refs });
-    } else 
-      return res.sendStatus(404);
-  } catch (err) {
-    return next(err);
-  }
-});
-
-// deçete user data, access by admin only
-router.delete('/:periodId', async (req, res, next) => {
-  try {
-    const period = await Period.findByIdAndRemove(req.params.periodId);
-
-    return res.sendStatus(204);
-  } catch (err) {
-    return next(err);
-  }
-});
-
-// get query users, access by admin only
+// get query periods, access by admin only
 router.get('/', async (req, res, next) => {
   try {
-    const periods = await Period.find().sort('name');
+    const periods = await Period.find({inactive: false}).sort('year');
 
     return res.json({ periods: periods.map(period => period.toCrudJSON()) });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// delete period data, access by admin only
+router.delete('/:periodId', async (req, res, next) => {
+  try {
+    let period = await Period.findById(req.params.periodId);
+
+    if (period.closed === false) { // lock period that is closed
+      period = await Period.findByIdAndUpdate({_id: req.params.periodId}, {inactive: true, closed: true});
+
+      return res.sendStatus(204);
+    } else {
+      return res.sendStatus(403);
+    }
   } catch (err) {
     return next(err);
   }

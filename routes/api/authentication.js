@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../../models/User');
 const passport = require('passport');
 const mailer = require('../../modules/mailer');
-const crypto = require('crypto');
+const genPass = require('generate-password');
 
 router.get('', async (req, res, next) => {
   try {
@@ -22,10 +22,10 @@ router.post('/login', async (req, res, next) => {
   const { email, password } = req.body.user;
 
   if (!email)
-    return res.status(422).json({ errors: { email: "can't be bland" } });
+    return res.status(422).json({ errors: { message: "E-mail não pode ser vazio" } });
 
   if (!password)
-    return res.status(422).json({ errors: { password: "can't be blank" } });
+    return res.status(422).json({ errors: { message: "Senha não pode ser vazia" } });
 
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err)
@@ -47,7 +47,7 @@ router.post('/register', async (req, res, next) => {
 
     if (key !== 'oparin')
       return res.status(403).json({ errors: {
-        message: 'operation not permited'
+        message: 'Operação não permitida'
       }});
 
     if (req.body.user.department && req.body.department.id)
@@ -63,15 +63,15 @@ router.post('/register', async (req, res, next) => {
 
     mailer.sendMail({
       to: user.email,
-      from: 'admin@company.com',
+      from: 'ti@canex.com.br',
       template: 'new_user',
-      context: { password }
+      context: { password },
     }, (err) => {
       if (err) {
         return res.json({
           user: user.toCrudJSON(),
           errors: {
-            message: 'welcome email not sent to user'
+            message: 'E-mail inicial não foi enviado ao usuário'
           }
         });
       }
@@ -92,11 +92,18 @@ router.post('/forgot_password', async (req, res, next) => {
     if (!user)
       return res.status(404).json({
         errors: {
-          email: "email not found"
+          message: "E-mail não encontrado"
         }
       });
+    if (user.inactive) {
+      return res.status(403).json({
+        errors: {
+          message: "Usuário não tem autorização para acessar o sistema"
+        }
+      });
+    }
 
-    const token = crypto.randomBytes(20).toString('hex');
+    const token = genPass.generate({length: 6, symbols: false, uppercase: false, numbers: true});
 
     const expires = new Date();
     expires.setTime(expires.getTime() + (3600000));
@@ -108,19 +115,19 @@ router.post('/forgot_password', async (req, res, next) => {
 
     mailer.sendMail({
       to: email,
-      from: 'admin@company.com',
+      from: 'ti@canex.com.br',
       template: 'forgot_password',
       context: { token }
     }, (err) => {
       if (err) {
         return res.json({
           errors: {
-            message: "forgot password email not sent to user"
+            message: '"Esqueceu sua senha" não enviado ao usuário'
           }
         });
       }
 
-      return res.send();
+      return res.status(200).json({ok: 'ok'});
     });
   } catch (err) {
     return next(err);
@@ -136,21 +143,21 @@ router.post('/reset_password', async (req, res) => {
     if (!user)
       return res.status(404).json({
         errors: {
-          message: "email not found"
+          message: "E-mail não encontrado"
         }
       });
 
     if (token !== user.passwordResetToken)
       return res.status(401).json({
         errors: {
-          message: "invalid token"
+          message: "Token inválido"
         }
       });
 
       if (!password)
       return res.status(422).json({
         errors: {
-          password: "can't be blank"
+          message: "Senha não pode ser vazia"
         }
       });
 
@@ -159,17 +166,15 @@ router.post('/reset_password', async (req, res) => {
     if (now > user.passwordResetExpires)
       return res.status(400).json({
         errors: {
-          message: "token expired, generate a new one"
+          message: "Token expirado, faça login novamente"
         }
       });
 
     user.setPassword(password);
 
-    console.log({user});
-
     await user.save();
 
-    res.send();
+    return res.status(200).json({ok: 'ok'});
   } catch (err) {
     return next(err);
   }

@@ -1,27 +1,55 @@
 const mongoose = require('../config/database');
 
+const TaxSchema = new mongoose.Schema({
+  ceiling: {
+    type: Number,
+    default: 0
+  },
+  percent: {
+    type: Number,
+    default: 0
+  },
+  deduction: {
+    type: Number,
+    default: 0
+  }
+});
+
 const PeriodSchema = new mongoose.Schema({
-  name: {
+  year: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Ano não pode ser vazio"]
   },
-  begin: {
-    type: String,
-    required: [true, "can't be blank"]
+  companyMultiplier: {
+    type: Number,
+    default: 0
   },
-  end: {
-    type: String,
-    required: [true, "can't be blank"]
+  tax: {
+    type: [ TaxSchema ]
+  },
+  closed: {
+    type: Boolean,
+    default: false
+  },
+  closedMonth: {
+    type: Number,
+    default: 0
+  },
+  inactive: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 
 PeriodSchema.methods.toCrudJSON = function() {
-  //console.log(this.begin.);
   return {
     id: this.id,
-    name: this.name,
-    begin: this.begin,
-    end: this.end,
+    year: this.year,
+    companyMultiplier: this.companyMultiplier,
+    tax: this.tax, 
+    closed: this.closed,
+    closedMonth: this.closedMonth,
+    inactive: this.inactive,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }

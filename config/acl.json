@@ -53,6 +53,21 @@
         "action": "allow"
       },
       {
+        "resource": "/baskets/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      {
+        "resource": "/contracts/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      {
+        "resource": "/contract_indicators/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      {
         "resource": "/periods/*",
         "methods": ["GET"],
         "action": "allow"
@@ -61,11 +76,6 @@
         "resource": "/periods/*",
         "methods": ["POST","PUT","DELETE"],
         "action": "deny"
-      },
-      {
-        "resource": "/charts/*",
-        "methods": ["GET"],
-        "action": "allow"
       }
     ]
   },
@@ -109,18 +119,43 @@
       },
       {
         "resource": "/indicators/*",
-        "methods": ["GET"],
+        "methods": ["GET", "PUT"],
         "action": "allow"
       },
       {
         "resource": "/indicators/*",
+        "methods": ["POST","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/baskets/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      {
+        "resource": "/baskets/*",
         "methods": ["POST","PUT","DELETE"],
         "action": "deny"
       },
       {
-        "resource": "/charts/*",
+        "resource": "/contracts/*",
         "methods": ["GET"],
         "action": "allow"
+      },
+      {
+        "resource": "/contracts/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
+      },
+      {
+        "resource": "/contract_indicators/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },  
+      {
+        "resource": "/contract_indicators/*",
+        "methods": ["POST","PUT","DELETE"],
+        "action": "deny"
       }
     ]
   }

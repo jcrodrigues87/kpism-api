@@ -10,7 +10,7 @@ let configObj = {
   denyCallback: (res) => {
     return res.status(403).json({
       errors: {
-        message: 'forbiden access'
+        message: 'Acesso negado'
       }
     });
   },
@@ -21,7 +21,6 @@ let configObj = {
 
 acl.config(configObj);
 
-//router.use(auth.optional);
 router.use(auth);
 router.use(acl.authorize);
 router.use(userlog);

@@ -3,11 +3,11 @@ const mongoose = require('../config/database');
 const DepartmentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Nome não pode ser vazio"]
   },
   description: {
     type: String,
-    required: [true, "can't be blank"]
+    required: [true, "Descrição não pode ser vazia"]
   },
   manager: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,6 +16,10 @@ const DepartmentSchema = new mongoose.Schema({
   childOf: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department'
+  },
+  inactive: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 
@@ -26,6 +30,7 @@ DepartmentSchema.methods.toCrudJSON = function() {
     description: this.description,
     manager: this.manager ? { id: this.manager.id, name: this.manager.name } : undefined,
     childOf: this.childOf ? { id: this.childOf.id, name: this.childOf.name } : undefined,
+    inactive: this.inactive,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }

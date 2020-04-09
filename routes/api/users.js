@@ -39,7 +39,7 @@ router.post('/', async (req, res, next) => {
         return res.json({
           user: user.toCrudJSON(),
           errors: {
-            message: "welcome email not sent to user"
+            message: "E-mail inicial não enviado ao usuário"
           }
         });
       }
@@ -107,27 +107,27 @@ router.get('/:userId', async (req, res, next) => {
   }
 });
 
-// deçete user data, access by admin only
-router.delete('/:userId', async (req, res, next) => {
-  try {
-    const user = await User.findByIdAndRemove(req.params.userId);
-
-    return res.sendStatus(204);
-  } catch (err) {
-    return next(err);
-  }
-});
-
 // get query users, access by admin only
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.find().populate(['department']);
+    const users = await User.find({inactive: false}).populate(['department']);
 
     for (let i = 0; i < users.length; i++) {
       users[i] = await populateUser(users[i]);
     }
 
     return res.json({ users: users.map(user => user.toCrudJSON()) });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// delete user data, access by admin only
+router.delete('/:userId', async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate({_id: req.params.userId}, {inactive: true});
+
+    return res.sendStatus(204);
   } catch (err) {
     return next(err);
   }

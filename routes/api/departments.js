@@ -2,14 +2,14 @@ const router = require('express').Router();
 const Department = require('../../models/Department');
 const User = require('../../models/User');
 
-// create a new user, access by admin only
+// create a new department, access by admin only
 router.post('/', async (req, res, next) => {
   try {
     const department = new Department(req.body.department);
 
     if (req.body.department.manager && req.body.department.manager.id) 
       department.manager = await User.findById(req.body.department.manager.id).populate(['department']);
-    else 
+    else
       department.manager = undefined;
 
     if (req.body.department.childOf && req.body.department.childOf.id) 
@@ -25,12 +25,12 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// update user data, acces by admin only
+// update department, acces by admin only
 router.put('/:departmentId', async (req, res, next) => {
   try {
     const department = await Department.findById(req.params.departmentId).populate(['manager','childOf']);
 
-    if (department) {
+    if (department && department.inactive === false) {
       const { name, description, manager, childOf } = req.body.department;
 
       if (name !== undefined)
@@ -62,7 +62,7 @@ router.put('/:departmentId', async (req, res, next) => {
   }
 });
 
-// get user data, access by admin only
+// get department, access by admin only
 router.get('/:departmentId', async (req, res, next) => {
   try {
     const department = await Department.findById(req.params.departmentId).populate(['manager','childOf']);
@@ -76,23 +76,23 @@ router.get('/:departmentId', async (req, res, next) => {
   }
 });
 
-// deçete user data, access by admin only
-router.delete('/:departmentId', async (req, res, next) => {
+// get query department, access by admin only
+router.get('/', async (req, res, next) => {
   try {
-    const department = await Department.findByIdAndRemove(req.params.departmentId);
+    const departments = await Department.find({inactive: false}).populate(['manager','childOf']);
 
-    return res.sendStatus(204);
+    return res.json({ departments: departments.map(department => department.toCrudJSON()) });
   } catch (err) {
     return next(err);
   }
 });
 
-// get query users, access by admin only
-router.get('/', async (req, res, next) => {
+// delete department, access by admin only
+router.delete('/:departmentId', async (req, res, next) => {
   try {
-    const departments = await Department.find().populate(['manager','childOf']);
-
-    return res.json({ departments: departments.map(department => department.toCrudJSON()) });
+    const department = await Department.findByIdAndUpdate({_id: req.params.departmentId}, {inactive: true}); // will not be deleted, will be set as inactive instead
+    
+    return res.sendStatus(204);
   } catch (err) {
     return next(err);
   }
