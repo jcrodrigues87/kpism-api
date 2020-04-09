@@ -6,7 +6,7 @@ async function start() {
   const defaultPassword = 'admin';
 
   user.name = 'admin';
-  user.email = 'admin@company.com';
+  user.email = 'luizpereira@canex.com.br';
   user.role = 'admin';
   user.setPassword('admin');
 
