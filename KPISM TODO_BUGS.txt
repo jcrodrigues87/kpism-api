@@ -8,10 +8,8 @@ Back-End:
 
 	Backend - Commit atual:
 
-	Tamanho do token de recuperação de senha reduzido;
-	Adicionado template de email para contas registradas;
-	Adicionado template de email para redefinição de senhas;
 
+	Corrigido formula de calculo de metering;
 
 	Concluido:
 
@@ -51,3 +49,7 @@ Back-End:
 	Alterado getDepartment, agora devolve departamento inativo;
 	Usuario agora tem autorização para dar PUT em indicadores. Para que possa ser possivel alterar o realizado em dashboard;
 	Usuario inativo não agora pode interagir com "Esqueceu sua senha"; 
+	Tamanho do token de recuperação de senha reduzido;
+	Adicionado template de email para contas registradas;
+	Adicionado template de email para redefinição de senhas;
+	Adicionado propriedade inativo a metering;
