@@ -17,7 +17,7 @@
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-acl": "^2.0.4",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^6.0.0",
     "generate-password": "^1.4.1",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.22.2",
