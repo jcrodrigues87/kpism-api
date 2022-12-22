@@ -19,7 +19,7 @@
     "express-acl": "^2.0.4",
     "express-jwt": "^5.3.1",
     "generate-password": "^1.4.1",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "moment": "^2.22.2",
     "mongoose": "^5.7.5",
     "mongoose-unique-validator": "^2.0.2",
